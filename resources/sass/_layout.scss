@@ -1,0 +1,17 @@
+html:not([dir=rtl]) .wrapper {
+    padding-left: var(--cui-sidebar-occupy-start, 0);
+    background: red;
+}
+
+.sidebar:not(.sidebar-end) {
+  --cui-sidebar-occupy-start: 16rem;
+}
+
+.header-nav .dropdown-menu {
+    left: -110px;
+    top: 45px;
+}
+
+.ck-editor__editable {
+    min-height: 150px;
+}

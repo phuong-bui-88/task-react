@@ -1,7 +1,20 @@
 import './bootstrap';
 
 import React from "react";
-import ReactDOM from "react-dom";
-import ExampleComponent from "./components/ExampleComponent.jsx";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(<ExampleComponent />, document.getElementById("app"))
+import { BrowserRouter } from "react-router-dom";
+
+import AppLayout from "./layouts/AppLayout.jsx";
+
+
+const rootElement = document.getElementById('app')
+const root = createRoot(rootElement)
+
+root.render(
+//     // <React.StrictMode>
+        <BrowserRouter>
+             <AppLayout />
+        </BrowserRouter>
+//     // {/*// </React.StrictMode>*/}
+)

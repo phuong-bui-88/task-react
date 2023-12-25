@@ -3,7 +3,7 @@ import React from "react";
 function ExampleComponent() {
     return (
         <div>
-            <h1>Hello word</h1>
+            <h1>Hello word component</h1>
         </div>
     )
 }
