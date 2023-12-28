@@ -4,7 +4,7 @@ import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 
-function CreateChecklistComponent({ onCreateChecklist }) {
+function CreateChecklistComponent({ onCreateChecklist, token }) {
 
     const { checklistGroupId } = useParams();
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ function CreateChecklistComponent({ onCreateChecklist }) {
     useEffect(() => {
         const fetchChecklistGroup = async (id) => {
                 // try {
-            const response = await ChecklistGroupService.getChecklistGroup(id);
+            const response = await ChecklistGroupService.getChecklistGroup(id, token);
             setChecklistGroup(response);
                 // } catch (error) {
                 //     console.error('Error fetching checklist groups:', error);

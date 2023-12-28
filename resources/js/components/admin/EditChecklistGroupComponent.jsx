@@ -4,7 +4,7 @@ import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 
-function EditChecklistGroupComponent({ onEdit, onDelete }) {
+function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
 
     const navigate = useNavigate();
     const [checklistGroup, setChecklistGroup] = useState(null);
@@ -19,8 +19,6 @@ function EditChecklistGroupComponent({ onEdit, onDelete }) {
     const handleDeletedSubmit = async (e) => {
         e.preventDefault();
 
-        console.log('handle delete');
-
         if (window.confirm('Are you sure?')) {
             onDelete(checklistGroup);
         }
@@ -34,9 +32,8 @@ function EditChecklistGroupComponent({ onEdit, onDelete }) {
 
     useEffect(() => {
         const fetchChecklistGroup = async (id) => {
-            console.log(id, 'id');
             //     // try {
-            const response = await ChecklistGroupService.getChecklistGroup(id);
+            const response = await ChecklistGroupService.getChecklistGroup(id, token);
             setChecklistGroup(response);
             //     // } catch (error) {
             //     //     console.error('Error fetching checklist groups:', error);

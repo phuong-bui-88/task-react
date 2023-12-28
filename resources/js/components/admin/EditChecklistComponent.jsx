@@ -3,11 +3,11 @@ import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
 import {Link, useNavigate, useParams} from "react-router-dom";
 import CheckListService from "../../services/CheckListService.js";
-import TaskListComponent from "../TaskListComponent.jsx";
+import TaskListComponent from "./TaskListComponent.jsx";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 
 
-function EditChecklistComponent({ onEditChecklist, onDeleteChecklist, onCreateTask, onDeleteTask }) {
+function EditChecklistComponent({ onEditChecklist, onDeleteChecklist, onCreateTask, onDeleteTask, token }) {
 
     const navigate = useNavigate();
     const [checklist, setChecklist] = useState(null);
@@ -35,7 +35,7 @@ function EditChecklistComponent({ onEditChecklist, onDeleteChecklist, onCreateTa
             position: index + 1
         }));
 
-        CheckListService.updatePositionTask(checklistId, taskToUpdate);
+        CheckListService.updatePositionTask(checklistId, taskToUpdate, token);
 
         fetchChecklist(checklistGroupId, checklistId);
     }
@@ -62,7 +62,6 @@ function EditChecklistComponent({ onEditChecklist, onDeleteChecklist, onCreateTa
         });
 
         fetchChecklist(checklistGroupId, checklistId);
-        console.log('show checklsit', checklist.tasks);
     }
 
     const handleDeletedSubmit = async (e) => {
@@ -82,7 +81,7 @@ function EditChecklistComponent({ onEditChecklist, onDeleteChecklist, onCreateTa
     }
 
     const fetchChecklist = async (checklistGroupId, checklistId) => {
-        const response = await CheckListService.getChecklist(checklistGroupId, checklistId);
+        const response = await CheckListService.getChecklist(checklistGroupId, checklistId, token);
         setChecklist(response);
     };
 

@@ -23,9 +23,9 @@ function LoginComponent() {
         const formJson = Object.fromEntries(formData.entries());
 
         try {
-            const responseData = await UserService.loginUser(formJson);
-
-            localStorage.setItem('user', JSON.stringify(responseData.data));
+            const token = await UserService.loginUser(formJson);
+            console.log(token);
+            localStorage.setItem('token', token);
 
             navigate('/home');
         } catch (error) {
@@ -35,7 +35,7 @@ function LoginComponent() {
     }
 
     return (
-        <div className="row justify-content-center">
+        <div className="d-flex justify-content-center min-vh-100 align-items-center">
             <div className="col-lg-6">
                 <div className="card-group d-block d-md-flex row">
                     <form method="POST" onSubmit={handleSubmit}>

@@ -1,45 +1,50 @@
 
 import axios from "axios";
 
-const getChecklistGroups = async () => {
+const getChecklistGroups = async (isUser = false, token) => {
     try {
-        const response = await axios.get('/api/checklist-groups');
+        let url = '/api/checklist-groups';
+        if (isUser) {
+            url += '?is_user=true';
+        }
+
+        const response = await axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } });
         return response.data.data;
     } catch (error) {
         throw error.response.data;
     }
 }
 
-const getChecklistGroup = async (id) => {
+const getChecklistGroup = async (id, token) => {
     try {
-        const response = await axios.get('/api/checklist-groups/' + id);
+        const response = await axios.get('/api/checklist-groups/' + id, { headers: { 'Authorization': `Bearer ${token}` } });
         return response.data.data;
     } catch (error) {
         throw error.response.data;
     }
 }
 
-const storeChecklistGroup = async (formData) => {
+const storeChecklistGroup = async (formData, token) => {
     try {
-        const response = await axios.post('/api/checklist-groups', formData);
+        const response = await axios.post('/api/checklist-groups', formData, { headers: { 'Authorization': `Bearer ${token}` } });
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 }
 
-const updateChecklistGroup = async (checklistGroup) => {
+const updateChecklistGroup = async (checklistGroup, token) => {
     try {
-        const response = await axios.put('/api/checklist-groups/' + checklistGroup.id, {'name': checklistGroup.name});
+        const response = await axios.put('/api/checklist-groups/' + checklistGroup.id, {'name': checklistGroup.name}, { headers: { 'Authorization': `Bearer ${token}` } });
         return response.data;
     } catch (error) {
         throw error.response.data;
     }
 }
 
-const destroyChecklistGroup = async (checklistGroup) => {
+const destroyChecklistGroup = async (checklistGroup, token) => {
     try {
-        const response = await axios.delete('/api/checklist-groups/' + checklistGroup.id);
+        const response = await axios.delete('/api/checklist-groups/' + checklistGroup.id, { headers: { 'Authorization': `Bearer ${token}` } });
         return response.data;
     } catch (error) {
         throw error.response.data;

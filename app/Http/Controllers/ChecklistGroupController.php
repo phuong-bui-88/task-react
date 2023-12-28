@@ -12,9 +12,13 @@ class ChecklistGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $checklistGroups = ChecklistGroup::with('checklists')->get()->all();
+        $checklistGroups = ChecklistGroup::with(['checklists' => function ($query) use ($request) {
+            if ($request->has('is_user') && $request->is_user) {
+                $query->whereNull('user_id');
+            }
+        }])->get();
 
         return ChecklistGroupResource::collection($checklistGroups);
     }

@@ -1,10 +1,19 @@
 
 import axios from "axios";
 
+const getUsers = async (currentPage, token) => {
+    return await axios.get(`/api/users?page=${currentPage}`, { headers: { Authorization: `Bearer ${token}` } });
+}
+
+const getUser = async (token) => {
+    const response = await axios.get('/api/user', { headers: { Authorization: `Bearer ${token}` } });
+    return response.data.data;
+}
+
 const registerUser = async (formData) => {
     try {
         const response = await axios.post('/register', formData);
-        return response.data;
+        return response.data.token;
     } catch (error) {
         throw error.response.data;
     }
@@ -14,7 +23,7 @@ const registerUser = async (formData) => {
 const loginUser = async (formData) => {
     try {
         const response = await axios.post('/login', formData);
-        return response.data;
+        return response.data.token;
     } catch (error) {
         throw error.response.data;
     }
@@ -29,4 +38,4 @@ const logoutUser = async (formData) => {
     }
 }
 
-export default { registerUser, loginUser, logoutUser };
+export default { getUsers, getUser, registerUser, loginUser, logoutUser };

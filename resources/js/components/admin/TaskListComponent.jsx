@@ -1,11 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import CheckListService from "../services/CheckListService.js";
 import {Link} from "react-router-dom";
-// import DraggableItemComponent from './DraggableItemComponent.jsx';
 
 
 const TaskListComponent = ({checklistId, tasks, onUpdatePositionTask, onDeletedTaskSubmit}) => {
@@ -26,15 +22,6 @@ const TaskListComponent = ({checklistId, tasks, onUpdatePositionTask, onDeletedT
          onUpdatePositionTask(updatedItems);
      };
 
-     // const handleDeletedTaskSubmit = async (event, task) => {
-     //
-     //    event.preventDefault();
-     //    if (window.confirm('Are you sure?')) {
-     //        onDeleteTask(task);
-     //        fetchChecklist(checklistGroupId, checklistId);
-     //    }
-     // }
-
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <table className="table table-responsive-sm">
@@ -54,15 +41,12 @@ const TaskListComponent = ({checklistId, tasks, onUpdatePositionTask, onDeletedT
                                             { item.name }
                                         </td>
                                         <td>
-                                            {/*to="{`admin/checklists/${checklistId}/tasks/${item.id}/edit`}" */}
-                                            {/*<Link className="nav-link" to={`/admin/checklist-groups/${checklistGroup.id}/checklists/create`}>*/}
                                             <Link className="btn btn-primary me-3" to={`/admin/checklists/${checklistId}/tasks/${item.id}/edit`}>Edit</Link>
 
                                             <form method="POST" onSubmit={(e) => onDeletedTaskSubmit(e, item)} className="d-inline-block">
                                                 <button className="btn btn-danger" type="submit">Delete</button>
                                             </form>
                                         </td>
-                                        {/* Additional table cells can be added here */}
                                     </tr>
                                 )}
                             </Draggable>

@@ -4,7 +4,7 @@ import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 import { useNavigate } from "react-router-dom";
 
 
-function CreateChecklistGroupComponent({ onCreate }) {
+function CreateChecklistGroupComponent({ onCreate, token }) {
 
     const navigate = useNavigate();
     const handleSubmit = async (e) => {

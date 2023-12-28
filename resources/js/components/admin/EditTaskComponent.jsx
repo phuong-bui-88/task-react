@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
-function EditTaskComponent({ onEditTask }) {
+function EditTaskComponent({ onEditTask, token }) {
 
     const navigate = useNavigate();
     const [task, setTask] = useState(null);
@@ -29,15 +29,13 @@ function EditTaskComponent({ onEditTask }) {
     useEffect(() => {
         const fetchTask = async (checklistId, taskId) => {
             //     // try {
-            const response = await TaskService.getTask(checklistId, taskId);
+            const response = await TaskService.getTask(checklistId, taskId, token);
             setTask(response);
             //     // } catch (error) {
             //     //     console.error('Error fetching checklist groups:', error);
             //     //     // Handle the error (e.g., show an error message to the user)
             //     // }
         };
-
-        console.log('t', checklistId, taskId);
 
         fetchTask(checklistId, taskId);
 

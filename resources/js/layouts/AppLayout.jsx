@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
 
 import ExampleComponent from "../components/ExampleComponent.jsx";
 import RegisterComponent from "../components/RegisterComponent.jsx";
@@ -17,25 +15,35 @@ import { useNavigate } from 'react-router-dom';
 import CreateChecklistComponent from "../components/admin/CreateChecklistComponent.jsx";
 import CheckListService from "../services/CheckListService.js";
 import EditChecklistComponent from "../components/admin/EditChecklistComponent.jsx";
-import {formToJSON} from "axios";
+
 import TaskService from "../services/TaskService.js";
 import PageService from "../services/PageService.js";
+import UserService from "../services/UserService.js";
+
 import EditPageComponent from "../components/admin/EditPageComponent.jsx";
 import PageComponent from "../components/PageComponent.jsx";
+import UserListComponent from "../components/admin/UserListComponent.jsx";
+import ChecklistComponent from "../components/user/ChecklistComponent.jsx";
 
 let count = 0
 
 function AppLayout() {
-    console.log('app layout ' + count++);
     const navigate = useNavigate();
 
+    const [user, setUser] = useState(null);
     const [checklistGroups, setChecklistGroups] = useState(null);
     const [pages, setPages] = useState();
     const [checklist, setChecklist] = useState(null);
+    const [leftSidebarActive, setLeftSidebarActive] = useState(true);
 
+    const token = localStorage.getItem('token');
+
+    function handleLeftSibarActive() {
+        setLeftSidebarActive(!leftSidebarActive);
+    }
 
     const createChecklistGroup = async (formJson) => {
-        const responseData = await ChecklistGroupService.storeChecklistGroup(formJson);
+        const responseData = await ChecklistGroupService.storeChecklistGroup(formJson, token);
 
         fetchChecklistGroups();
 
@@ -43,7 +51,7 @@ function AppLayout() {
     };
 
     const createChecklist = async (checklistGroupId, formJson) => {
-        const responseData = await CheckListService.storeChecklist(checklistGroupId, formJson);
+        const responseData = await CheckListService.storeChecklist(checklistGroupId, formJson, token);
 
         fetchChecklistGroups();
 
@@ -51,11 +59,11 @@ function AppLayout() {
     };
 
     const createTask = async (checklistId, formJson) => {
-        const responseData = await TaskService.storeTask(checklistId, formJson);
+        const responseData = await TaskService.storeTask(checklistId, formJson, token);
     }
 
     const editChecklistGroup = async (checklistGroup) => {
-        const responseData = await ChecklistGroupService.updateChecklistGroup(checklistGroup);
+        const responseData = await ChecklistGroupService.updateChecklistGroup(checklistGroup, token);
 
         fetchChecklistGroups();
 
@@ -63,7 +71,7 @@ function AppLayout() {
     };
 
     const editChecklist = async (checklist) => {
-        const responseData = await CheckListService.updateChecklist(checklist.checklistGroupId, checklist);
+        const responseData = await CheckListService.updateChecklist(checklist.checklistGroupId, checklist, token);
 
         fetchChecklistGroups();
 
@@ -71,19 +79,19 @@ function AppLayout() {
     };
 
     const editTask = async (task) => {
-        const responseData = await TaskService.updateTask(task);
+        const responseData = await TaskService.updateTask(task, token);
 
         navigate(-1);
-    }
+    };
 
     const editPage = async (page) => {
-        const responseData = await PageService.updatePage(page);
+        const responseData = await PageService.updatePage(page, token);
         fetchPages();
         navigate('/home');
-    }
+    };
 
     const deleteChecklistGroup = async (checklistGroup) => {
-        const responseData = await ChecklistGroupService.destroyChecklistGroup(checklistGroup);
+        const responseData = await ChecklistGroupService.destroyChecklistGroup(checklistGroup, token);
 
         fetchChecklistGroups();
 
@@ -91,7 +99,7 @@ function AppLayout() {
     }
 
     const deleteChecklist = async (checklist) => {
-        const responseData = await CheckListService.destroyChecklist(checklist.checklistGroupId, checklist);
+        const responseData = await CheckListService.destroyChecklist(checklist.checklistGroupId, checklist, token);
 
         fetchChecklistGroups();
 
@@ -99,60 +107,87 @@ function AppLayout() {
     };
 
     const deleteTask = async (taskData) => {
-        const responseData = await TaskService.destroyTask(taskData);
+        const responseData = await TaskService.destroyTask(taskData, token);
     }
 
-    const fetchChecklistGroups = async () => {
-        const response = await ChecklistGroupService.getChecklistGroups();
+    const fetchChecklistGroups = async (isUser = false) => {
+        const response = await ChecklistGroupService.getChecklistGroups(isUser, token);
         setChecklistGroups(response);
-        // console.log('t1');
     };
 
     const fetchPages = async () => {
-        const response = await PageService.getPages();
+        const response = await PageService.getPages(token);
         setPages(response);
     };
 
     const fetchChecklist = async (checklistId) => {
-        const response = await CheckListService.getChecklist(checklistId);
+        const response = await CheckListService.getChecklist(checklistId, token);
         setChecklist(response);
     };
 
+    useEffect(() => {
+        const fetchUser = async (token) => {
+            const response = await UserService.getUser(token);
+            setUser(response);
+        }
 
+        (token) && fetchUser(token);
+    },[token])
 
     useEffect(() => {
-        fetchChecklistGroups();
+        if (!user) {
+            return;
+        }
+
+        if (user.is_admin) {
+            fetchChecklistGroups();
+        }
+        else {
+            fetchChecklistGroups(true);
+        }
         fetchPages();
-    }, []);
+    }, [user]);
 
     return (
         <div>
-            <div className="sidebar sidebar-fixed" style={{ height: '100%', overflow: 'hidden scroll' }}>
-                <LeftSidebarComponent checklistGroups={checklistGroups} pages={pages}/>
-            </div>
+            {user && (
+                <div className={`sidebar sidebar-fixed ${!leftSidebarActive ? 'hide' : ''}`}
+                     style={{height: '100%', overflow: 'hidden scroll'}}>
+                    <LeftSidebarComponent checklistGroups={checklistGroups} user={user} pages={pages}/>
+                </div>
+            )}
 
             <div className="wrapper d-flex flex-column min-vh-100 bg-light">
-                <div className="header header-sticky mb-4">
-                    <HeaderSidebarComponent/>
-                </div>
+                {user && (
+                    <div className="header header-sticky mb-4">
+                        <HeaderSidebarComponent onLeftSibarActive={handleLeftSibarActive} user={user}/>
+                    </div>
+                )}
 
                 <Routes>
                     <Route path="/welcome"
-                           element={<PageComponent pageId={1}/> } />
+                           element={<PageComponent pageId={1} token={token}/>} />
                     <Route path="/consulation"
-                           element={<PageComponent pageId={2}/> } />
+                           element={<PageComponent pageId={2} token={token}/> } />
+                    <Route path="/admin/users"
+                           element={<UserListComponent token={token}/> } />
                     <Route path="/admin/pages/:pageId/edit"
-                           element={<EditPageComponent onEditPage={editPage}/>} />
+                           element={<EditPageComponent onEditPage={editPage} token={token}/>} />
+                    <Route path="/checklists/:checklistId"
+                           element={<ChecklistComponent token={token}/> } />
                     <Route path="/admin/checklists/:checklistId/tasks/:taskId/edit"
-                           element={<EditTaskComponent onEditTask={editTask}/>} />
+                           element={<EditTaskComponent onEditTask={editTask} token={token}/>} />
                     <Route path="/admin/checklist-groups/:checklistGroupId/checklists/:checklistId/edit"
-                           element={<EditChecklistComponent checklist={checklist} onEditChecklist={editChecklist} onDeleteChecklist={deleteChecklist} onCreateTask ={createTask} onDeleteTask={deleteTask}/>}/>
+                           element={<EditChecklistComponent checklist={checklist}
+                                onEditChecklist={editChecklist} onDeleteChecklist={deleteChecklist}
+                                onCreateTask ={createTask} onDeleteTask={deleteTask} token={token}/>}/>
                     <Route path="/admin/checklist-groups/:checklistGroupId/edit"
-                           element={<EditChecklistGroupComponent onEdit={editChecklistGroup} onDelete={deleteChecklistGroup}/>}/>
+                           element={<EditChecklistGroupComponent onEdit={editChecklistGroup}
+                                onDelete={deleteChecklistGroup} token={token}/>}/>
                     <Route path="/admin/checklist-groups/create"
-                           element={<CreateChecklistGroupComponent onCreate={createChecklistGroup}/>}/>
+                           element={<CreateChecklistGroupComponent onCreate={createChecklistGroup} token={token}/>}/>
                     <Route path="/admin/checklist-groups/:checklistGroupId/checklists/create"
-                           element={<CreateChecklistComponent onCreateChecklist={createChecklist}/>}/>
+                           element={<CreateChecklistComponent onCreateChecklist={createChecklist} token={token}/>}/>
                     <Route path="/admin/page" element={<ExampleComponent/>}/>
                     <Route path="/register" element={<RegisterComponent/>}/>
                     <Route path="/login" element={<LoginComponent/>}/>

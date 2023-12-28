@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import PageService from "../../services/PageService.js";
-function EditPageComponent({ onEditPage }) {
+function EditPageComponent({ onEditPage, token }) {
 
     const [page, setPage] = useState(null);
     const { pageId} = useParams();
@@ -23,13 +23,12 @@ function EditPageComponent({ onEditPage }) {
     };
 
     const handleEditorInputChange = (newData) => {
-        // console.log('set value', page);
         setPage({...page,  content: newData });
     }
 
     useEffect(() => {
         const fetchPage = async (pageId) => {
-            const response = await PageService.getPage(pageId);
+            const response = await PageService.getPage(pageId, token);
             setPage(response);
         }
 
@@ -54,12 +53,9 @@ function EditPageComponent({ onEditPage }) {
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Title</label>
-                                    { page.id }
-                                    { page.title }
                                     <input type="text" className="form-control" name="title" placeholder="Title"
                                            value={page.title ?? ''}
                                            onChange={handleInputChange}
-                                           // onChange={(e) => setPage({ ...page, title: e.target.value })}
                                     />
                                 </div>
 
