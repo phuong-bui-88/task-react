@@ -33,6 +33,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('checklist-groups/{checklist_group}/checklists', \App\Http\Controllers\ChecklistController::class);
 
     Route::resource('checklist-groups', \App\Http\Controllers\ChecklistGroupController::class);
+
+    Route::post('upload', [\App\Http\Controllers\UploadController::class, 'upload']);
 });
 
 Route::middleware(['is_admin'])->group(function () {

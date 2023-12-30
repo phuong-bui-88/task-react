@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import PageService from "../../services/PageService.js";
-function EditPageComponent({ onEditPage, token }) {
+function EditPageComponent({ onEditPage, onUploadImage }) {
 
     const [page, setPage] = useState(null);
     const { pageId} = useParams();

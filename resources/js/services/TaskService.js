@@ -11,6 +11,7 @@ const getTasks = async (checklistId, token) => {
 }
 
 const getTask = async (checklistId ,taskId, token) => {
+    console.log('getTask', checklistId, taskId, token);
     // try {
         const response = await axios.get('/api/checklists/' + checklistId + '/tasks/' + taskId, { headers: { Authorization: `Bearer ${token}` } });
         return response.data.data;

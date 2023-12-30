@@ -67,7 +67,7 @@ function EditTaskComponent({ onEditTask, token }) {
 
                                 <div className="mb-3">
                                     <label className="form-label">Description</label>
-                                    <CKEditorComponent data={task.description} onChange={handleEditorInputChange} />
+                                    <CKEditorComponent data={task.description} onChange={handleEditorInputChange}/> 
                                 </div>
 
                             </div>
