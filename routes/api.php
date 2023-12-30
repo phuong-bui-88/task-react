@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user', [App\Http\Controllers\UserController::class, 'show']);
     // Welcome and Consulation routes
     Route::get('welcome', [\App\Http\Controllers\PageController::class, 'welcome']);
@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // PageController routes
     Route::resource('pages', \App\Http\Controllers\PageController::class);
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
+
     Route::get('checklists/{checklist}', [\App\Http\Controllers\User\ChecklistController::class, 'show'])->name('user.checklist.show');
 
     // TaskController routes
@@ -33,23 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource('checklist-groups', \App\Http\Controllers\ChecklistGroupController::class);
 });
-//    ->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
-//Route::middleware(['auth'])->group(function () {
-    // Welcome and Consulation routes
-
-    // Admin middleware group within Auth group
-
-//});
-
-
 
 Route::middleware(['is_admin'])->group(function () {
-
-
-
-
 
 });

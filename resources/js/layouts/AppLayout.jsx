@@ -174,7 +174,7 @@ function AppLayout() {
                     <Route path="/admin/pages/:pageId/edit"
                            element={<EditPageComponent onEditPage={editPage} token={token}/>} />
                     <Route path="/checklists/:checklistId"
-                           element={<ChecklistComponent token={token}/> } />
+                           element={<ChecklistComponent token={token} onFetchChecklistGroup={fetchChecklistGroups} /> } />
                     <Route path="/admin/checklists/:checklistId/tasks/:taskId/edit"
                            element={<EditTaskComponent onEditTask={editTask} token={token}/>} />
                     <Route path="/admin/checklist-groups/:checklistGroupId/checklists/:checklistId/edit"

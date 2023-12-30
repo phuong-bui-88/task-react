@@ -16,4 +16,9 @@ class Checklist extends Model
     {
         return $this->hasMany(Task::class)->orderBy('position');
     }
+
+    public function checklistGroup()
+    {
+        return $this->belongsTo(ChecklistGroup::class);
+    }
 }

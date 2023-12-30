@@ -25,6 +25,15 @@ function LeftSidebarUserComponent({ checklistGroups }) {
                 <li key={checklistGroup.id}>
                     <div className={`nav-title show ${isActive[checklistGroup.id] ? 'show' : ''}`} >
                         {checklistGroup.name}
+
+                        {checklistGroup.is_new && (
+                            <span className="badge bg-info ms-2">NEW</span>
+                        )}
+
+                        {checklistGroup.is_update && (
+                            <span className="badge bg-info ms-2">UPD</span>
+                        )}
+
                     </div>
                     <ul className="nav-group-items" key={checklistGroup.id + '-checklist'}>
                         {
@@ -32,7 +41,17 @@ function LeftSidebarUserComponent({ checklistGroups }) {
                                 <li className="nav-item" key={checklist.id}>
                                     <Link className="nav-link ps-4" to={`/checklists/${checklist.id}`}>
                                         <ChecklistIcon className="pe-2"/>
+                                        <small>
                                         {checklist.name}
+
+                                        {checklist.is_new && (
+                                            <span className="badge bg-info ms-2">NEW</span>
+                                        )}
+
+                                        {checklist.is_update && (
+                                            <span className="badge bg-info ms-2">UPD</span>
+                                        )}
+                                        </small>
                                     </Link>
                                 </li>
                             ))
