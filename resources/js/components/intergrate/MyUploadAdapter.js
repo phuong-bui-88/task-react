@@ -32,13 +32,6 @@ class MyUploadAdapter {
           });
         });
       }
-
-    // Aborts the upload process.
-    abort() {
-        if ( this.xhr ) {
-            this.xhr.abort();
-        }
-    }
 }
 
 export default MyUploadAdapter;

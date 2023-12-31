@@ -50,7 +50,7 @@ function ChecklistComponent({ token, onFetchChecklistGroup }) {
                                         </td>
                                     </tr>
                                     <tr className={expandedTasks[index] ? '' : 'd-none'}>
-                                        <td colSpan="2" dangerouslySetInnerHTML={{ __html: task.description }}></td>
+                                        <td className="ck-content" colSpan="2" dangerouslySetInnerHTML={{ __html: task.description }}></td>
                                     </tr>
                                 </React.Fragment>
                             ))}
