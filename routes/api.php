@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('checklists/{checklist}', [\App\Http\Controllers\User\ChecklistController::class, 'show'])->name('user.checklist.show');
 
     // TaskController routes
+    Route::put('tasks/{task}/complete', [\App\Http\Controllers\TaskController::class, 'complete']);
     Route::resource('checklists/{checklist}/tasks', \App\Http\Controllers\TaskController::class);
     Route::put('checklists/{checklist}/task-positions', [\App\Http\Controllers\TaskController::class, 'updatePosition']);
     // ChecklistController routes

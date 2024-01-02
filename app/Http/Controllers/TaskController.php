@@ -85,4 +85,24 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Positions updated successfully']);
     }
+
+    public function complete(Request $request, Task $task)
+    {
+        // $completed = $request->get('completed');
+        $user = $request->user();
+        $userTask = Task::where('id', $task->id)->where('user_id', $user->id)->first();
+        
+        if ($userTask) {
+            $userTask->update(['completed_at' => now()]);
+        }
+        else {
+            $userTask = $task->replicate();
+            $userTask->user_id = $user->id;
+            $userTask->completed_at = now();
+            $userTask->task_id = $task->id;
+            $userTask->save();
+        }
+        
+        return new TaskResource($task);
+    }
 }

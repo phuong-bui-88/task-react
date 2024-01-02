@@ -3,9 +3,7 @@ import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
 import { useNavigate } from "react-router-dom";
 
-
 function CreateChecklistGroupComponent({ onCreate, token }) {
-
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,8 +20,7 @@ function CreateChecklistGroupComponent({ onCreate, token }) {
         // } catch (error) {
         //
         // }
-
-    }
+    };
 
     return (
         <div className="container-lg">
@@ -38,13 +35,23 @@ function CreateChecklistGroupComponent({ onCreate, token }) {
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Name</label>
-                                    <input type="text" className="form-control" name="name" placeholder="Checklist group name"></input>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="name"
+                                        placeholder="Checklist group name"
+                                    ></input>
                                 </div>
                             </div>
 
                             <div className="card-footer">
                                 <div className="col-12">
-                                    <button className="btn btn-primary" type="submit">Save</button>
+                                    <button
+                                        className="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        Save
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -52,8 +59,7 @@ function CreateChecklistGroupComponent({ onCreate, token }) {
                 </div>
             </div>
         </div>
-
-    )
+    );
 }
 
-export default CreateChecklistGroupComponent
+export default CreateChecklistGroupComponent;

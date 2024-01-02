@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Task; // Add this import statement
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +15,7 @@ class Checklist extends Model
 
     public function tasks()
     {
-        return $this->hasMany(Task::class)->orderBy('position');
+        return $this->hasMany(Task::class)->whereNull('user_id')->orderBy('position');
     }
 
     public function checklistGroup()

@@ -24,6 +24,8 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'last_action_at',
+        'user_id',
+        'task_id'
     ];
 
     /**
