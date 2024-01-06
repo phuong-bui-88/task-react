@@ -125,6 +125,45 @@ function AppLayout() {
         setChecklist(response);
     };
 
+    const findIndexesByChecklistIdAndGroupId = (checklistGroupId, checklistId) => {
+        let groupIndex = -1;
+        let checklistIndex = -1;
+    
+        checklistGroups.forEach((group, currentGroupIndex) => {
+          const checklistFoundIndex = group.checklists.findIndex(
+            (checklist) => checklist.id == checklistId
+          );
+    
+          if (checklistFoundIndex !== -1) {
+            groupIndex = currentGroupIndex;
+            checklistIndex = checklistFoundIndex;
+          }
+        });
+    
+        return { groupIndex, checklistIndex };
+      };
+
+    const handleCountUserCompletedTasks = (checklistGroupId, checklistId) => {
+        let { groupIndex, checklistIndex } = findIndexesByChecklistIdAndGroupId(checklistGroupId, checklistId);
+
+        let newValue = checklistGroups[groupIndex].checklists[checklistIndex].count_user_completed_tasks + 1;
+        
+        setChecklistGroups((prevChecklistGroups) => {
+            const updatedGroups = [...prevChecklistGroups];
+            updatedGroups[groupIndex] = {
+              ...updatedGroups[groupIndex],
+              checklists: [
+                ...updatedGroups[groupIndex].checklists.map((checklist, index) =>
+                  index === checklistIndex
+                    ? { ...checklist, count_user_completed_tasks: newValue }
+                    : checklist
+                ),
+              ],
+            };
+            return updatedGroups;
+        });
+    }
+
     useEffect(() => {
         const fetchUser = async (token) => {
             const response = await UserService.getUser(token);
@@ -174,7 +213,7 @@ function AppLayout() {
                     <Route path="/admin/pages/:pageId/edit"
                            element={<EditPageComponent onEditPage={editPage} />} />
                     <Route path="/checklists/:checklistId"
-                           element={<ChecklistComponent token={token} onFetchChecklistGroup={fetchChecklistGroups} /> } />
+                           element={<ChecklistComponent token={token} onFetchChecklistGroup={fetchChecklistGroups} onCountUserCompletedTasks={handleCountUserCompletedTasks}/> } />
                     <Route path="/admin/checklists/:checklistId/tasks/:taskId/edit"
                            element={<EditTaskComponent onEditTask={editTask} token={token} />} />
                     <Route path="/admin/checklist-groups/:checklistGroupId/checklists/:checklistId/edit"

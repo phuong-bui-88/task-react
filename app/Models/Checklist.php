@@ -22,4 +22,12 @@ class Checklist extends Model
     {
         return $this->belongsTo(ChecklistGroup::class);
     }
+
+    public function userTasks()
+    {
+        $user = request()->user();
+        return $this->hasMany(Task::class)
+            ->where('user_id', $user->id)->orderBy('position');
+    }
+
 }

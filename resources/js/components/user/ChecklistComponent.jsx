@@ -8,7 +8,7 @@ import TokenService from "@services/TokenService";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-function ChecklistComponent({ token, onFetchChecklistGroup }) {
+function ChecklistComponent({ token, onFetchChecklistGroup, onCountUserCompletedTasks }) {
     const { checklistId } = useParams();
     const [checklist, setChecklist] = useState(null);
 
@@ -20,6 +20,7 @@ function ChecklistComponent({ token, onFetchChecklistGroup }) {
             ...prevState,
             [index]: !prevState[index],
         }));
+        
     };
 
     const fetchChecklist = async (checklistId) => {
@@ -29,13 +30,15 @@ function ChecklistComponent({ token, onFetchChecklistGroup }) {
         );
         setChecklist(response);
     };
-
+    
     const handleCompletedTask = (e, taskId) => {
         e.stopPropagation();
         token = TokenService.getToken();
 
         TaskService.completeTask(taskId, token);
         fetchChecklist(checklistId);
+
+        onCountUserCompletedTasks(checklist.checklistGroupId, checklistId);
     };
 
     useEffect(() => {

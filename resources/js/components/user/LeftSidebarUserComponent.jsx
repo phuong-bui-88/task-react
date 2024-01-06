@@ -33,8 +33,8 @@ function LeftSidebarUserComponent({ checklistGroups }) {
                         {checklistGroup.is_update && (
                             <span className="badge bg-info ms-2">UPD</span>
                         )}
-
                     </div>
+                    
                     <ul className="nav-group-items" key={checklistGroup.id + '-checklist'}>
                         {
                             checklistGroup.checklists && checklistGroup.checklists.map((checklist) => (
@@ -43,6 +43,10 @@ function LeftSidebarUserComponent({ checklistGroups }) {
                                         <ChecklistIcon className="pe-2"/>
                                         <small>
                                         {checklist.name}
+
+                                        {(checklist.count_tasks) && (
+                                            <span className="badge bg-info ms-2">{checklist.count_user_completed_tasks}/{checklist.count_tasks}</span>
+                                        )}
 
                                         {checklist.is_new && (
                                             <span className="badge bg-info ms-2">NEW</span>

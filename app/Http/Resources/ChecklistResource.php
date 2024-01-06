@@ -34,6 +34,8 @@ class ChecklistResource extends JsonResource
             'is_update' => $this->when($isUpdate && $isUser, $isUpdate),
             'checklistGroupId' => $this->checklist_group_id,
             'tasks' => TaskResource::collection($this->tasks),
+            'count_tasks' => $this->when($isUser, $this->tasks->count()), 
+            'count_user_completed_tasks' => $this->when($isUser, $this->userTasks->where('completed_at', true)->count()),
         ];
     }
 }

@@ -17,9 +17,12 @@ class ChecklistGroupResource extends JsonResource
     {
         $user = $request->user();
         $isUser = $request->has('is_user') && $request->is_user;
-        $userChecklists = Checklist::where('user_id', $user->id);
-        $groupUpdatedAt = $userChecklists->where('checklist_group_id', $this->id)->max('updated_at');
+        $userChecklists = Checklist::where('user_id', $user->id)
+            ->where('checklist_group_id', $this->id)
+            ->whereNull('deleted_at');
 
+        $groupUpdatedAt = $userChecklists->selectRaw('MAX(updated_at) as aggregate')->value('aggregate');
+        
         $isNew = is_null($groupUpdatedAt);
         $isUpdate = !$isNew && $this->updated_at->gt($groupUpdatedAt);
 
