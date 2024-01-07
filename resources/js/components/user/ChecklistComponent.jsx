@@ -7,8 +7,14 @@ import TokenService from "@services/TokenService";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CountTaskComponent from "./CountTaskComponent";
 
-function ChecklistComponent({ token, onFetchChecklistGroup, onCountUserCompletedTasks }) {
+function ChecklistComponent({
+    token,
+    checklistGroups,
+    onFetchChecklistGroup,
+    onCountUserCompletedTasks,
+}) {
     const { checklistId } = useParams();
     const [checklist, setChecklist] = useState(null);
 
@@ -20,7 +26,6 @@ function ChecklistComponent({ token, onFetchChecklistGroup, onCountUserCompleted
             ...prevState,
             [index]: !prevState[index],
         }));
-        
     };
 
     const fetchChecklist = async (checklistId) => {
@@ -28,9 +33,10 @@ function ChecklistComponent({ token, onFetchChecklistGroup, onCountUserCompleted
             checklistId,
             token
         );
+
         setChecklist(response);
     };
-    
+
     const handleCompletedTask = (e, taskId) => {
         e.stopPropagation();
         token = TokenService.getToken();
@@ -49,6 +55,11 @@ function ChecklistComponent({ token, onFetchChecklistGroup, onCountUserCompleted
 
     return checklist ? (
         <div>
+            <CountTaskComponent
+                checklistGroups={checklistGroups}
+                checklist={checklist}
+            />
+
             <div className="card m-3">
                 <div className="card-header">
                     <h3>{checklist.name}</h3>
