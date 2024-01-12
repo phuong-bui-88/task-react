@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserService from "../services/UserService.js";
 
 import { useNavigate } from "react-router-dom";
@@ -31,8 +31,17 @@ function LoginComponent() {
         } catch (error) {
 
         }
-
     }
+
+
+    const useEffect = (
+        () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                navigate('/home');
+            }
+        }, []
+    )
 
     return (
         <div className="d-flex justify-content-center min-vh-100 align-items-center">
@@ -48,14 +57,14 @@ function LoginComponent() {
                                     <span className="input-group-text">
                                         <MailIcon className="pe-1" />
                                     </span>
-                                    <input className="form-control" type="text" required autoComplete="email" name="email"/>
+                                    <input className="form-control" type="text" required autoComplete="email" name="email" />
                                 </div>
 
                                 <div className="input-group mb-4">
                                     <span className="input-group-text">
                                         <KeyIcon className="pe-1" />
                                     </span>
-                                    <input className="form-control" type="password" required autoComplete="password" name="password"/>
+                                    <input className="form-control" type="password" required autoComplete="password" name="password" />
                                 </div>
 
                                 <div className="row">

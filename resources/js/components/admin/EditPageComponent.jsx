@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
-import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import PageService from "../../services/PageService.js";
-function EditPageComponent({ onEditPage, onUploadImage }) {
+function EditPageComponent({ onEditPage, token }) {
 
     const [page, setPage] = useState(null);
-    const { pageId} = useParams();
+    const { pageId } = useParams();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +22,7 @@ function EditPageComponent({ onEditPage, onUploadImage }) {
     };
 
     const handleEditorInputChange = (newData) => {
-        setPage({...page,  content: newData });
+        setPage({ ...page, content: newData });
     }
 
     useEffect(() => {
@@ -54,8 +53,8 @@ function EditPageComponent({ onEditPage, onUploadImage }) {
                                 <div className="mb-3">
                                     <label className="form-label">Title</label>
                                     <input type="text" className="form-control" name="title" placeholder="Title"
-                                           value={page.title ?? ''}
-                                           onChange={handleInputChange}
+                                        value={page.title ?? ''}
+                                        onChange={handleInputChange}
                                     />
                                 </div>
 

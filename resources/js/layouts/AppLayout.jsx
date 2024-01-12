@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import ExampleComponent from "../components/ExampleComponent.jsx";
-import RegisterComponent from "../components/RegisterComponent.jsx";
-import LoginComponent from "../components/LoginComponent.jsx";
-import LeftSidebarComponent from "../components/LeftSidebarComponent.jsx";
 import HeaderSidebarComponent from "../components/HeaderSidebarComponent.jsx";
+import LeftSidebarComponent from "../components/LeftSidebarComponent.jsx";
+import LoginComponent from "../components/LoginComponent.jsx";
+import RegisterComponent from "../components/RegisterComponent.jsx";
 import CreateChecklistGroupComponent from "../components/admin/CreateChecklistGroupComponent.jsx";
 import EditChecklistGroupComponent from "../components/admin/EditChecklistGroupComponent.jsx";
 import EditTaskComponent from "../components/admin/EditTaskComponent.jsx";
 
-import ChecklistGroupService from "../services/ChecklistGroupService.js";
 import { useNavigate } from "react-router-dom";
 import CreateChecklistComponent from "../components/admin/CreateChecklistComponent.jsx";
-import CheckListService from "../services/CheckListService.js";
 import EditChecklistComponent from "../components/admin/EditChecklistComponent.jsx";
+import CheckListService from "../services/CheckListService.js";
+import ChecklistGroupService from "../services/ChecklistGroupService.js";
 
-import TaskService from "../services/TaskService.js";
 import PageService from "../services/PageService.js";
+import TaskService from "../services/TaskService.js";
 import UserService from "../services/UserService.js";
 
-import EditPageComponent from "../components/admin/EditPageComponent.jsx";
+import { useLocation } from "react-router-dom";
 import PageComponent from "../components/PageComponent.jsx";
+import EditPageComponent from "../components/admin/EditPageComponent.jsx";
 import UserListComponent from "../components/admin/UserListComponent.jsx";
 import ChecklistComponent from "../components/user/ChecklistComponent.jsx";
 
 function AppLayout() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [user, setUser] = useState(null);
     const [checklistGroups, setChecklistGroups] = useState(null);
@@ -175,9 +177,9 @@ function AppLayout() {
                         (checklist, index) =>
                             index === checklistIndex
                                 ? {
-                                      ...checklist,
-                                      count_user_completed_tasks: newValue,
-                                  }
+                                    ...checklist,
+                                    count_user_completed_tasks: newValue,
+                                }
                                 : checklist
                     ),
                 ],
@@ -192,7 +194,17 @@ function AppLayout() {
             setUser(response);
         };
 
-        token && fetchUser(token);
+        // or page is register or login
+
+        if (!token && location.pathname != "/register") {
+            UserService.logoutUser();
+            setUser(null);
+            navigate("/login");
+        }
+
+        if (token) {
+            fetchUser(token);
+        }
     }, [token]);
 
     useEffect(() => {
@@ -212,9 +224,8 @@ function AppLayout() {
         <div>
             {user && (
                 <div
-                    className={`sidebar sidebar-fixed ${
-                        !leftSidebarActive ? "hide" : ""
-                    }`}
+                    className={`sidebar de sidebar-fixed ${!leftSidebarActive ? "hide" : ""
+                        }`}
                     style={{ height: "100%", overflow: "hidden scroll" }}
                 >
                     <LeftSidebarComponent
@@ -231,6 +242,9 @@ function AppLayout() {
                         <HeaderSidebarComponent
                             onLeftSibarActive={handleLeftSibarActive}
                             user={user}
+                            onLogout={() => {
+                                setUser(null);
+                            }}
                         />
                     </div>
                 )}
@@ -250,7 +264,7 @@ function AppLayout() {
                     />
                     <Route
                         path="/admin/pages/:pageId/edit"
-                        element={<EditPageComponent onEditPage={editPage} />}
+                        element={<EditPageComponent onEditPage={editPage} token={token} />}
                     />
                     <Route
                         path="/checklists/:checklistId"

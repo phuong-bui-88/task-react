@@ -23,14 +23,14 @@ function EditChecklistComponent({
     });
 
     const handleInputChange = (e) => {
-        setTaskData({
-            ...taskData,
+        setTaskData(prevTaskData => ({
+            ...prevTaskData,
             [e.target.name]: e.target.value,
-        });
+        }));
     };
 
     const handleEditorInputChange = (newData) => {
-        setTaskData({ ...taskData, description: newData });
+        setTaskData(prevTaskData => ({ ...prevTaskData, description: newData }));
     };
 
     const updatePositionTask = async (updatedTask) => {
@@ -59,12 +59,12 @@ function EditChecklistComponent({
 
         onCreateTask(checklistId, taskData);
 
+        fetchChecklist(checklistGroupId, checklistId);
+
         setTaskData({
             name: "",
             description: "",
         });
-
-        fetchChecklist(checklistGroupId, checklistId);
     };
 
     const handleDeletedSubmit = async (e) => {
@@ -117,7 +117,7 @@ function EditChecklistComponent({
                                     <input
                                         type="text"
                                         className="form-control"
-                                        name="name"
+                                        name="checklist_name"
                                         placeholder="Checklist group name"
                                         value={checklist ? checklist.name : ""}
                                         onChange={(e) =>
