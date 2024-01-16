@@ -22,7 +22,7 @@ function CreateChecklistGroupComponent({ onFetchChecklistGroups }) {
         const formJson = Object.fromEntries(formData.entries());
 
         try {
-            const responseData = await ChecklistGroupService.storeChecklistGroup(
+            await ChecklistGroupService.storeChecklistGroup(
                 formJson,
                 token
             );
