@@ -33,7 +33,6 @@ function AppLayout() {
     const [user, setUser] = useState(null);
     const [checklistGroups, setChecklistGroups] = useState(null);
     const [pages, setPages] = useState();
-    const [checklist, setChecklist] = useState(null);
     const [leftSidebarActive, setLeftSidebarActive] = useState(true);
 
     const token = localStorage.getItem("token");
@@ -41,37 +40,6 @@ function AppLayout() {
     function handleLeftSibarActive() {
         setLeftSidebarActive(!leftSidebarActive);
     }
-
-    const createChecklistGroup = async (formJson) => {
-        const responseData = await ChecklistGroupService.storeChecklistGroup(
-            formJson,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        // navigate('/home');
-    };
-
-    const createChecklist = async (checklistGroupId, formJson) => {
-        const responseData = await CheckListService.storeChecklist(
-            checklistGroupId,
-            formJson,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        navigate("/home");
-    };
-
-    const createTask = async (checklistId, formJson) => {
-        const responseData = await TaskService.storeTask(
-            checklistId,
-            formJson,
-            token
-        );
-    };
 
     const editChecklistGroup = async (checklistGroup) => {
         const responseData = await ChecklistGroupService.updateChecklistGroup(
@@ -148,19 +116,10 @@ function AppLayout() {
         setPages(response);
     };
 
-    const fetchChecklist = async (checklistId) => {
-        const response = await CheckListService.getChecklist(
-            checklistId,
-            token
-        );
-        setChecklist(response);
-    };
-
     const handleCountUserCompletedTasks = (checklistGroupId, checklistId) => {
         let { groupIndex, checklistIndex } =
-            ChecklistGroupService.findIndexesByChecklistIdAndGroupId(
+            ChecklistGroupService.findIndexesByChecklistId(
                 checklistGroups,
-                checklistGroupId,
                 checklistId
             );
 
@@ -292,10 +251,8 @@ function AppLayout() {
                         path="/admin/checklist-groups/:checklistGroupId/checklists/:checklistId/edit"
                         element={
                             <EditChecklistComponent
-                                checklist={checklist}
                                 onEditChecklist={editChecklist}
                                 onDeleteChecklist={deleteChecklist}
-                                onCreateTask={createTask}
                                 onDeleteTask={deleteTask}
                                 token={token}
                             />
@@ -314,19 +271,13 @@ function AppLayout() {
                     <Route
                         path="/admin/checklist-groups/create"
                         element={
-                            <CreateChecklistGroupComponent
-                                onCreate={createChecklistGroup}
-                                token={token}
-                            />
+                            <CreateChecklistGroupComponent onFetchChecklistGroups={fetchChecklistGroups} />
                         }
                     />
                     <Route
                         path="/admin/checklist-groups/:checklistGroupId/checklists/create"
                         element={
-                            <CreateChecklistComponent
-                                onCreateChecklist={createChecklist}
-                                token={token}
-                            />
+                            <CreateChecklistComponent checklistGroups={checklistGroups} onFetchChecklistGroups={fetchChecklistGroups} />
                         }
                     />
                     <Route path="/admin/page" element={<ExampleComponent />} />

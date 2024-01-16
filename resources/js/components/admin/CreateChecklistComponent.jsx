@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
+import CheckListService from "@services/CheckListService.js";
+import HelperService from "@services/HelperService.js";
 import { useNavigate, useParams } from "react-router-dom";
+import TokenService from "@services/TokenService.js";
+import ErrorComponent from "@components/intergrate/ErrorComponent.jsx";
 
 
-function CreateChecklistComponent({ onCreateChecklist, token }) {
+function CreateChecklistComponent({ checklistGroups, onFetchChecklistGroups }) {
 
     const { checklistGroupId } = useParams();
     const navigate = useNavigate();
     const [checklistGroup, setChecklistGroup] = useState(null);
+
+    const [errors, setErrors] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,44 +23,46 @@ function CreateChecklistComponent({ onCreateChecklist, token }) {
         const form = e.target;
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
-        onCreateChecklist(checklistGroupId, formJson);
+        const token = TokenService.getToken();
 
+        try {
+            await CheckListService.storeChecklist(
+                checklistGroup.id,
+                formJson,
+                token
+            );
+
+            onFetchChecklistGroups();
+            navigate("/home");
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
+        }
     }
 
     useEffect(() => {
-        const fetchChecklistGroup = async (id) => {
-                // try {
-            const response = await ChecklistGroupService.getChecklistGroup(id, token);
-            setChecklistGroup(response);
-                // } catch (error) {
-                //     console.error('Error fetching checklist groups:', error);
-                //     // Handle the error (e.g., show an error message to the user)
-                // }
-        };
+        if (!checklistGroups) return;
 
-        fetchChecklistGroup(checklistGroupId);
+        const checklistGroupIndex = ChecklistGroupService.findIndexesByGroupId(checklistGroups, checklistGroupId);
+        setChecklistGroup(checklistGroups[checklistGroupIndex]);
 
-    }, [checklistGroupId]);
+    }, [checklistGroups]);
 
-    // Check if checklistGroup is null before accessing its properties
-    if (checklistGroup == null) {
-        return <div>Loading...</div>; // Or render a loading indicator
-    }
-
-    return (
+    return (checklistGroup &&
         <div className="container-lg">
             <div className="row">
                 <div className="col-12">
                     <div className="card mb-4">
                         <form method="POST" onSubmit={handleSubmit}>
                             <div className="card-header">
-                                <strong>New checklist in { checklistGroup.name }</strong>
+                                <strong>New checklist in {checklistGroup.name}</strong>
                             </div>
 
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Name</label>
-                                    <input type="text" className="form-control" name="name" placeholder="Checklist name"></input>
+                                    <input type="text" className={HelperService.addInvalid(null, errors?.name)} name="name" placeholder="Checklist name"></input>
+                                    <ErrorComponent error={errors?.name} />
                                 </div>
                             </div>
 

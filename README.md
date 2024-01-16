@@ -4,3 +4,4 @@
 
 -   [barryvdh/laravel-ide-helper](https://github.com/barryvdh/laravel-ide-helper/issues/1489).
 -   [jsconfig](https://laravel-news.com/jsconfigjs-vscode)
+-   [eslint extension] `npm install eslint`, `npx eslint --init`

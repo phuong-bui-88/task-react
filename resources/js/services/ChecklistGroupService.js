@@ -37,14 +37,10 @@ const getChecklistGroup = async (id, token) => {
 };
 
 const storeChecklistGroup = async (formData, token) => {
-    try {
-        const response = await axios.post("/api/checklist-groups", formData, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+    const response = await axios.post("/api/checklist-groups", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
 };
 
 const updateChecklistGroup = async (checklistGroup, token) => {
@@ -72,11 +68,7 @@ const destroyChecklistGroup = async (checklistGroup, token) => {
     }
 };
 
-const findIndexesByChecklistIdAndGroupId = (
-    checklistGroups,
-    checklistGroupId,
-    checklistId
-) => {
+const findIndexesByChecklistId = (checklistGroups, checklistId) => {
     let groupIndex = -1;
     let checklistIndex = -1;
 
@@ -94,11 +86,24 @@ const findIndexesByChecklistIdAndGroupId = (
     return { groupIndex, checklistIndex };
 };
 
+const findIndexesByGroupId = (checklistGroups, checklistGroupId) => {
+    let groupIndex = -1;
+
+    checklistGroups.forEach((group, currentGroupIndex) => {
+        if (group.id == checklistGroupId) {
+            groupIndex = currentGroupIndex;
+        }
+    });
+
+    return groupIndex;
+};
+
 export default {
     getChecklistGroups,
     getChecklistGroup,
     storeChecklistGroup,
     updateChecklistGroup,
     destroyChecklistGroup,
-    findIndexesByChecklistIdAndGroupId,
+    findIndexesByChecklistId,
+    findIndexesByGroupId,
 };

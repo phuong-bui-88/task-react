@@ -1,19 +1,13 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      // "@/*": [
-      //   "resources/js/*"
-      // ],
-      "@services/*": [
-        "resources/js/services/*"
-      ],
-      "@components/*": [
-        "resources/js/components/*"
-      ],
-    }
-  },
-  "include": [
-    "resources/js/**/*"
-  ]
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            // "@/*": [
+            //   "resources/js/*"
+            // ],
+            "@services/*": ["resources/js/services/*"],
+            "@components/*": ["resources/js/components/*"]
+        }
+    },
+    "include": ["resources/js/**/*"]
 }

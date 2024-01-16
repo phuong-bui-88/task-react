@@ -1,10 +1,18 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
+import ErrorComponent from "@components/intergrate/ErrorComponent";
+import HelperService from "@services/HelperService";
+import TokenService from "@services/TokenService.js";
 import { useNavigate } from "react-router-dom";
+import ChecklistGroupService from "@services/ChecklistGroupService";
 
-function CreateChecklistGroupComponent({ onCreate, token }) {
+
+function CreateChecklistGroupComponent({ onFetchChecklistGroups }) {
     const navigate = useNavigate();
+    const token = TokenService.getToken();
+    const [errors, setErrors] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -12,14 +20,19 @@ function CreateChecklistGroupComponent({ onCreate, token }) {
         const form = e.target;
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
-        onCreate(formJson);
-        // try {
-        //     const responseData = await ChecklistGroupService.storeChecklistGroup(formJson);
-        //
-        //     navigate('/home');
-        // } catch (error) {
-        //
-        // }
+
+        try {
+            const responseData = await ChecklistGroupService.storeChecklistGroup(
+                formJson,
+                token
+            );
+
+            onFetchChecklistGroups();
+
+            navigate('/home');
+        } catch (error) {
+            setErrors(error.response.data.errors);
+        }
     };
 
     return (
@@ -37,10 +50,11 @@ function CreateChecklistGroupComponent({ onCreate, token }) {
                                     <label className="form-label">Name</label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={HelperService.addInvalid(null, errors?.name)}
                                         name="name"
                                         placeholder="Checklist group name"
                                     ></input>
+                                    <ErrorComponent error={errors?.name} />
                                 </div>
                             </div>
 

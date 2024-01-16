@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import UserService from "../services/UserService.js";
 
 import { useNavigate } from "react-router-dom";
 
-import MailIcon from '@mui/icons-material/Mail';
 import KeyIcon from '@mui/icons-material/Key';
+import MailIcon from '@mui/icons-material/Mail';
+import ErrorComponent from "./intergrate/ErrorComponent.jsx";
+import HelperService from "@services/HelperService.js";
 
 function LoginComponent() {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     })
+    const [errors, setErrors] = useState(null);
 
     const navigate = useNavigate();
 
@@ -24,17 +27,16 @@ function LoginComponent() {
 
         try {
             const token = await UserService.loginUser(formJson);
-            console.log(token);
             localStorage.setItem('token', token);
 
             navigate('/home');
         } catch (error) {
-
+            setErrors(error.errors);
         }
     }
 
 
-    const useEffect = (
+    useEffect(
         () => {
             const token = localStorage.getItem('token');
             if (token) {
@@ -45,7 +47,7 @@ function LoginComponent() {
 
     return (
         <div className="d-flex justify-content-center min-vh-100 align-items-center">
-            <div className="col-lg-6">
+            <div className="col-lg-6 col-md-6">
                 <div className="card-group d-block d-md-flex row">
                     <form method="POST" onSubmit={handleSubmit}>
 
@@ -57,14 +59,17 @@ function LoginComponent() {
                                     <span className="input-group-text">
                                         <MailIcon className="pe-1" />
                                     </span>
-                                    <input className="form-control" type="text" required autoComplete="email" name="email" />
+                                    <input className={HelperService.addInvalid('form-control', errors?.email)}
+                                        type="text" required autoComplete="email" name="email" />
+                                    <ErrorComponent error={errors?.email} />
                                 </div>
 
                                 <div className="input-group mb-4">
                                     <span className="input-group-text">
                                         <KeyIcon className="pe-1" />
                                     </span>
-                                    <input className="form-control" type="password" required autoComplete="password" name="password" />
+                                    <input className={HelperService.addInvalid('form-control', errors?.password)} type="password" required autoComplete="password" name="password" />
+                                    <ErrorComponent error={errors?.password} />
                                 </div>
 
                                 <div className="row">

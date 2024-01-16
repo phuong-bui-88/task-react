@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import UserService from "../services/UserService.js";
 
 import PersonIcon from '@mui/icons-material/Person';
@@ -7,6 +7,8 @@ import KeyIcon from '@mui/icons-material/Key';
 import PublicIcon from '@mui/icons-material/Public';
 
 import { useNavigate } from "react-router-dom";
+import ErrorComponent from "./intergrate/ErrorComponent.jsx";
+import HelperService from "@services/HelperService.js";
 
 function RegisterComponent() {
     const [formData, setFormData] = useState({
@@ -16,7 +18,10 @@ function RegisterComponent() {
         password_confirmation: '',
     })
 
+    const [errors, setErrors] = useState(null);
+
     const navigate = useNavigate();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,7 +37,7 @@ function RegisterComponent() {
 
             navigate('/home');
         } catch (error) {
-
+            setErrors(error.errors);
         }
 
     }
@@ -50,34 +55,40 @@ function RegisterComponent() {
                                     <PersonIcon />
                                 </span>
 
-                                <input className="form-control" type="text" placeholder="Username" name="name"
-                                       required/>
+                                <input className={HelperService.addInvalid('form-control', errors?.name)} type="text" placeholder="Username" name="name"
+                                    required />
+                                <ErrorComponent error={errors?.name} />
                             </div>
 
                             <div className="input-group mb-3">
                                 <span className="input-group-text">
                                     <EmailIcon />
                                 </span>
-                                <input className="form-control" type="email" placeholder="Email" name="email" required/>
+                                <input className={HelperService.addInvalid('form-control', errors?.email)} type="email" placeholder="Email" name="email" required />
+                                <ErrorComponent error={errors?.email} />
                             </div>
 
                             <div className="input-group mb-3">
                                 <span className="input-group-text">
                                     <PublicIcon />
                                 </span>
-                                <input className="form-control" type="url" placeholder="Website" name="website"/>
+                                <input className={HelperService.addInvalid('form-control', errors?.website)} type="url" placeholder="Website" name="website" />
+                                <ErrorComponent error={errors?.website} />
                             </div>
 
                             <div className="input-group mb-3">
                                 <span className="input-group-text"><KeyIcon /></span>
-                                <input className="form-control" type="password" placeholder="Password" name="password"
-                                       required/>
+                                <input className={HelperService.addInvalid('form-control', errors?.password)} type="password" placeholder="Password" name="password"
+                                    required />
+                                <ErrorComponent error={errors?.password} />
                             </div>
 
                             <div className="input-group mb-4">
                                 <span className="input-group-text"><KeyIcon /></span>
-                                <input className="form-control" type="password" placeholder="Repeat password"
-                                       name="password_confirmation" required/>
+                                <input className={HelperService.addInvalid('form-control', errors?.pa)} type="password" placeholder="Repeat password"
+                                    name="password_confirmation" required />
+
+                                <ErrorComponent error={errors?.password_confirmation} />
                             </div>
 
                             <button className="btn btn-primary" type="submit">Create Account</button>
@@ -86,7 +97,7 @@ function RegisterComponent() {
                 </div>
             </div>
         </div>
-)
+    )
 }
 
 export default RegisterComponent

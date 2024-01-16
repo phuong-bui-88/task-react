@@ -13,9 +13,8 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
         setSumUserTaskCount(0);
 
         const { groupIndex, checklistIndex } =
-            ChecklistGroupService.findIndexesByChecklistIdAndGroupId(
+            ChecklistGroupService.findIndexesByChecklistId(
                 checklistGroups,
-                checklist.checklistGroupId,
                 checklist.id
             );
 
@@ -59,11 +58,10 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
                                             className="progress-bar bg-success"
                                             role="progressbar"
                                             style={{
-                                                width: `${
-                                                    (checklist.count_user_completed_tasks /
+                                                width: `${(checklist.count_user_completed_tasks /
                                                         checklist.count_tasks) *
                                                     100
-                                                }%`,
+                                                    }%`,
                                             }}
                                             aria-valuemin="0"
                                             aria-valuemax="100"
@@ -85,9 +83,8 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
                                 className="progress-bar bg-success"
                                 role="progressbar"
                                 style={{
-                                    width: `${
-                                        (sumUserTaskCount / sumTaskCount) * 100
-                                    }%`,
+                                    width: `${(sumUserTaskCount / sumTaskCount) * 100
+                                        }%`,
                                 }}
                                 aria-valuemin="0"
                                 aria-valuemax="100"

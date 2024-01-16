@@ -32,13 +32,8 @@ function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
 
     useEffect(() => {
         const fetchChecklistGroup = async (id) => {
-            //     // try {
             const response = await ChecklistGroupService.getChecklistGroup(id, token);
             setChecklistGroup(response);
-            //     // } catch (error) {
-            //     //     console.error('Error fetching checklist groups:', error);
-            //     //     // Handle the error (e.g., show an error message to the user)
-            //     // }
         };
 
         fetchChecklistGroup(checklistGroupId);
@@ -50,7 +45,7 @@ function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
         return <div>Loading...</div>; // Or render a loading indicator
     }
 
-    return (
+    return (checklistGroup &&
         <div className="container-lg">
             <div className="row">
                 <div className="col-12">
@@ -64,8 +59,8 @@ function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
                                 <div className="mb-3">
                                     <label className="form-label">Name</label>
                                     <input type="text" className="form-control" name="name" placeholder="Checklist group name"
-                                           value={checklistGroup ? checklistGroup.name : ''}
-                                           onChange={(e) => setChecklistGroup({ ...checklistGroup, name: e.target.value })}
+                                        value={checklistGroup ? checklistGroup.name : ''}
+                                        onChange={(e) => setChecklistGroup({ ...checklistGroup, name: e.target.value })}
                                     />
 
                                 </div>

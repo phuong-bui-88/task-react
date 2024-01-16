@@ -1,37 +1,19 @@
 import React, { useEffect, useState } from "react";
-import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 import CheckListService from "../../services/CheckListService.js";
-import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import TaskListComponent from "./TaskListComponent.jsx";
+import CreateTaskComponent from "./CreateTaskComponent.jsx";
 
 function EditChecklistComponent({
     onEditChecklist,
     onDeleteChecklist,
-    onCreateTask,
     onDeleteTask,
     token,
 }) {
     const navigate = useNavigate();
     const [checklist, setChecklist] = useState(null);
     const { checklistGroupId, checklistId } = useParams();
-
-    const [taskData, setTaskData] = useState({
-        name: "",
-        description: "",
-    });
-
-    const handleInputChange = (e) => {
-        setTaskData(prevTaskData => ({
-            ...prevTaskData,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
-    const handleEditorInputChange = (newData) => {
-        setTaskData(prevTaskData => ({ ...prevTaskData, description: newData }));
-    };
 
     const updatePositionTask = async (updatedTask) => {
         const taskToUpdate = updatedTask.map((task, index) => ({
@@ -47,24 +29,6 @@ function EditChecklistComponent({
     const handleSubmit = async (e) => {
         e.preventDefault();
         onEditChecklist(checklist);
-    };
-
-    const handleTaskSubmit = async (e) => {
-        e.preventDefault();
-
-        // Read the form data
-        const form = e.target;
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
-
-        onCreateTask(checklistId, taskData);
-
-        fetchChecklist(checklistGroupId, checklistId);
-
-        setTaskData({
-            name: "",
-            description: "",
-        });
     };
 
     const handleDeletedSubmit = async (e) => {
@@ -178,48 +142,7 @@ function EditChecklistComponent({
 
             <div className="row">
                 <div className="col-12">
-                    <div className="card mb-4">
-                        <form method="POST" onSubmit={handleTaskSubmit}>
-                            <div className="card-header">
-                                <strong>New Task</strong>
-                            </div>
-
-                            <div className="card-body">
-                                <div className="mb-3">
-                                    <label className="form-label">Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        name="name"
-                                        placeholder="Task name"
-                                        value={taskData.name}
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <div className="form-label">
-                                        Description
-                                    </div>
-                                    <CKEditorComponent
-                                        data={taskData.description}
-                                        onChange={handleEditorInputChange}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="card-footer">
-                                <div className="col-12">
-                                    <button
-                                        className="btn btn-primary"
-                                        type="submit"
-                                    >
-                                        Save Task
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <CreateTaskComponent checklistGroupId={checklistGroupId} checklistId={checklistId} onFetchChecklist={fetchChecklist} />
                 </div>
             </div>
         </div>
