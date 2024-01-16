@@ -1,58 +1,70 @@
 import React, { useEffect, useState } from "react";
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import ErrorComponent from "@components/intergrate/ErrorComponent.jsx";
+import HelperService from "@services/HelperService.js";
+import TokenService from "@services/TokenService.js";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckListService from "../../services/CheckListService.js";
-import TaskListComponent from "./TaskListComponent.jsx";
 import CreateTaskComponent from "./CreateTaskComponent.jsx";
+import TaskListComponent from "./TaskListComponent.jsx";
 
 function EditChecklistComponent({
-    onEditChecklist,
-    onDeleteChecklist,
-    onDeleteTask,
-    token,
+    onFetchChecklistGroups,
 }) {
     const navigate = useNavigate();
     const [checklist, setChecklist] = useState(null);
     const { checklistGroupId, checklistId } = useParams();
+    const token = TokenService.getToken();
+    const [errors, setErrors] = useState([]);
 
-    const updatePositionTask = async (updatedTask) => {
-        const taskToUpdate = updatedTask.map((task, index) => ({
-            id: task.id,
-            position: index + 1,
-        }));
-
-        CheckListService.updatePositionTask(checklistId, taskToUpdate, token);
-
-        fetchChecklist(checklistGroupId, checklistId);
-    };
-
-    const handleSubmit = async (e) => {
+    const handleUpdatedSubmit = async (e) => {
         e.preventDefault();
-        onEditChecklist(checklist);
+
+        try {
+            await CheckListService.updateChecklist(
+                checklist.checklistGroupId,
+                checklist,
+                token
+            );
+
+            onFetchChecklistGroups();
+            navigate("/home");
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
+        }
     };
 
     const handleDeletedSubmit = async (e) => {
         e.preventDefault();
 
-        if (window.confirm("Are you sure?")) {
-            onDeleteChecklist(checklist);
+        if (!window.confirm("Are you sure?")) {
+            return;
+        }
+
+        try {
+            await CheckListService.destroyChecklist(
+                checklist.checklistGroupId,
+                checklist,
+                token
+            );
+
+            onFetchChecklistGroups();
+
+            navigate("/home");
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
         }
     };
 
-    const deletedTaskSubmit = async (event, task) => {
-        event.preventDefault();
-        if (window.confirm("Are you sure?")) {
-            onDeleteTask(task);
-            fetchChecklist(checklistGroupId, checklistId);
-        }
-    };
-
-    const fetchChecklist = async (checklistGroupId, checklistId) => {
+    const fetchChecklist = async () => {
         const response = await CheckListService.getChecklist(
             checklistGroupId,
             checklistId,
             token
         );
+
         setChecklist(response);
     };
 
@@ -60,17 +72,12 @@ function EditChecklistComponent({
         fetchChecklist(checklistGroupId, checklistId);
     }, [checklistId]);
 
-    // Check if checklistGroup is null before accessing its properties
-    if (checklist == null) {
-        return <div>Loading...</div>; // Or render a loading indicator
-    }
-
-    return (
+    return (checklist &&
         <div className="container-lg">
             <div className="row">
                 <div className="col-12">
                     <div className="card mb-4">
-                        <form method="POST" onSubmit={handleSubmit}>
+                        <form method="POST" onSubmit={handleUpdatedSubmit}>
                             <div className="card-header">
                                 <strong>Edit checklist</strong>
                             </div>
@@ -80,7 +87,7 @@ function EditChecklistComponent({
                                     <label className="form-label">Name</label>
                                     <input
                                         type="text"
-                                        className="form-control"
+                                        className={HelperService.addInvalid(null, errors?.name)}
                                         name="checklist_name"
                                         placeholder="Checklist group name"
                                         value={checklist ? checklist.name : ""}
@@ -91,6 +98,7 @@ function EditChecklistComponent({
                                             })
                                         }
                                     />
+                                    <ErrorComponent error={errors?.name} />
                                 </div>
                             </div>
 
@@ -129,8 +137,7 @@ function EditChecklistComponent({
                                 <TaskListComponent
                                     checklistId={checklistId}
                                     tasks={checklist.tasks}
-                                    onUpdatePositionTask={updatePositionTask}
-                                    onDeletedTaskSubmit={deletedTaskSubmit}
+                                    onFetchChecklist={fetchChecklist}
                                 />
                             </div>
                         </div>

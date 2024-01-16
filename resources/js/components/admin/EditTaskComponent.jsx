@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import HelperService from "@services/HelperService.js";
+import TokenService from "@services/TokenService.js";
 import { useNavigate, useParams } from "react-router-dom";
 import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
-function EditTaskComponent({ onEditTask, token }) {
+import ErrorComponent from "@components/intergrate/ErrorComponent.jsx";
+
+function EditTaskComponent() {
 
     const navigate = useNavigate();
     const [task, setTask] = useState(null);
     const { checklistId, taskId } = useParams();
+    const token = TokenService.getToken();
+    const [errors, setErrors] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        onEditTask(task);
+        try {
+            await TaskService.updateTask(task, token);
+            navigate(-1);
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
+        }
     }
 
     const handleInputChange = (e) => {
@@ -23,30 +35,20 @@ function EditTaskComponent({ onEditTask, token }) {
     };
 
     const handleEditorInputChange = (newData) => {
-        setTask({...task, description: newData });
+        setTask({ ...task, description: newData });
     }
 
     useEffect(() => {
         const fetchTask = async (checklistId, taskId) => {
-            //     // try {
             const response = await TaskService.getTask(checklistId, taskId, token);
             setTask(response);
-            //     // } catch (error) {
-            //     //     console.error('Error fetching checklist groups:', error);
-            //     //     // Handle the error (e.g., show an error message to the user)
-            //     // }
         };
 
         fetchTask(checklistId, taskId);
 
     }, [taskId]);
 
-    // Check if checklistGroup is null before accessing its properties
-    if (task == null) {
-        return <div>Loading...</div>; // Or render a loading indicator
-    }
-
-    return (
+    return (task &&
         <div className="container-lg">
             <div className="row">
                 <div className="col-12">
@@ -59,15 +61,16 @@ function EditTaskComponent({ onEditTask, token }) {
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Name</label>
-                                    <input type="text" className="form-control" name="name" placeholder="Checklist group name"
-                                           value={task.name}
-                                           onChange={handleInputChange}
+                                    <input type="text" className={HelperService.addInvalid(null, errors?.name)} name="name" placeholder="Checklist group name"
+                                        value={task.name}
+                                        onChange={handleInputChange}
                                     />
+                                    <ErrorComponent error={errors?.name} />
                                 </div>
 
                                 <div className="mb-3">
                                     <label className="form-label">Description</label>
-                                    <CKEditorComponent data={task.description} onChange={handleEditorInputChange}/> 
+                                    <CKEditorComponent data={task.description} onChange={handleEditorInputChange} />
                                 </div>
 
                             </div>

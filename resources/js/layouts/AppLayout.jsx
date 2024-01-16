@@ -13,7 +13,6 @@ import EditTaskComponent from "../components/admin/EditTaskComponent.jsx";
 import { useNavigate } from "react-router-dom";
 import CreateChecklistComponent from "../components/admin/CreateChecklistComponent.jsx";
 import EditChecklistComponent from "../components/admin/EditChecklistComponent.jsx";
-import CheckListService from "../services/CheckListService.js";
 import ChecklistGroupService from "../services/ChecklistGroupService.js";
 
 import PageService from "../services/PageService.js";
@@ -41,66 +40,10 @@ function AppLayout() {
         setLeftSidebarActive(!leftSidebarActive);
     }
 
-    const editChecklistGroup = async (checklistGroup) => {
-        const responseData = await ChecklistGroupService.updateChecklistGroup(
-            checklistGroup,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        navigate("/home");
-    };
-
-    const editChecklist = async (checklist) => {
-        const responseData = await CheckListService.updateChecklist(
-            checklist.checklistGroupId,
-            checklist,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        navigate("/home");
-    };
-
-    const editTask = async (task) => {
-        const responseData = await TaskService.updateTask(task, token);
-
-        navigate(-1);
-    };
-
     const editPage = async (page) => {
         const responseData = await PageService.updatePage(page, token);
         fetchPages();
         navigate("/home");
-    };
-
-    const deleteChecklistGroup = async (checklistGroup) => {
-        const responseData = await ChecklistGroupService.destroyChecklistGroup(
-            checklistGroup,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        navigate("/home");
-    };
-
-    const deleteChecklist = async (checklist) => {
-        const responseData = await CheckListService.destroyChecklist(
-            checklist.checklistGroupId,
-            checklist,
-            token
-        );
-
-        fetchChecklistGroups();
-
-        navigate("/home");
-    };
-
-    const deleteTask = async (taskData) => {
-        const responseData = await TaskService.destroyTask(taskData, token);
     };
 
     const fetchChecklistGroups = async (isUser = false) => {
@@ -240,21 +183,13 @@ function AppLayout() {
                     />
                     <Route
                         path="/admin/checklists/:checklistId/tasks/:taskId/edit"
-                        element={
-                            <EditTaskComponent
-                                onEditTask={editTask}
-                                token={token}
-                            />
-                        }
+                        element={<EditTaskComponent />}
                     />
                     <Route
                         path="/admin/checklist-groups/:checklistGroupId/checklists/:checklistId/edit"
                         element={
                             <EditChecklistComponent
-                                onEditChecklist={editChecklist}
-                                onDeleteChecklist={deleteChecklist}
-                                onDeleteTask={deleteTask}
-                                token={token}
+                                onFetchChecklistGroups={fetchChecklistGroups}
                             />
                         }
                     />
@@ -262,9 +197,8 @@ function AppLayout() {
                         path="/admin/checklist-groups/:checklistGroupId/edit"
                         element={
                             <EditChecklistGroupComponent
-                                onEdit={editChecklistGroup}
-                                onDelete={deleteChecklistGroup}
-                                token={token}
+                                checklistGroups={checklistGroups}
+                                onFetchChecklistGroups={fetchChecklistGroups}
                             />
                         }
                     />

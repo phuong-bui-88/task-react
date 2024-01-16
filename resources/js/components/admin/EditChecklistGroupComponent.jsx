@@ -1,49 +1,66 @@
 import React, { useState, useEffect } from "react";
-import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
 import { useNavigate, useParams } from "react-router-dom";
+import TokenService from "@services/TokenService.js";
+import ChecklistGroupService from "@services/ChecklistGroupService";
+import HelperService from "@services/HelperService";
+import ErrorComponent from "@components/intergrate/ErrorComponent";
 
 
-function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
+function EditChecklistGroupComponent({ checklistGroups, onFetchChecklistGroups }) {
 
     const navigate = useNavigate();
     const [checklistGroup, setChecklistGroup] = useState(null);
+    const [errors, setErrors] = useState(null);
     const { checklistGroupId } = useParams();
+    const token = TokenService.getToken();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        onEdit(checklistGroup);
+        try {
+            await ChecklistGroupService.updateChecklistGroup(
+                checklistGroup,
+                token
+            );
+
+            onFetchChecklistGroups();
+            navigate("/home");
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
+        }
+
     }
 
     const handleDeletedSubmit = async (e) => {
         e.preventDefault();
 
-        if (window.confirm('Are you sure?')) {
-            onDelete(checklistGroup);
+        if (!window.confirm('Are you sure?')) {
+            return
+        }
+
+        try {
+            await ChecklistGroupService.destroyChecklistGroup(
+                checklistGroup,
+                token
+            );
+
+            onFetchChecklistGroups();
+
+            navigate("/home");
+        }
+        catch (error) {
+            setErrors(error.response.data.errors);
         }
     }
 
-    // if (checklistGroupId) {
-    //     const checklistGroup = fetchChecklistGroup(checklistGroupId);
-    // }
-
-    // console.log(checklistGroup, 'e');
-
     useEffect(() => {
-        const fetchChecklistGroup = async (id) => {
-            const response = await ChecklistGroupService.getChecklistGroup(id, token);
-            setChecklistGroup(response);
-        };
+        if (!checklistGroups) return;
 
-        fetchChecklistGroup(checklistGroupId);
-
-    }, [checklistGroupId]);
-
-    // Check if checklistGroup is null before accessing its properties
-    if (checklistGroup == null) {
-        return <div>Loading...</div>; // Or render a loading indicator
-    }
+        let checklistGroupIndex = ChecklistGroupService.findIndexesByGroupId(checklistGroups, checklistGroupId);
+        setChecklistGroup(checklistGroups[checklistGroupIndex]);
+    }, [checklistGroups, checklistGroupId]);
 
     return (checklistGroup &&
         <div className="container-lg">
@@ -58,11 +75,11 @@ function EditChecklistGroupComponent({ onEdit, onDelete, token }) {
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Name</label>
-                                    <input type="text" className="form-control" name="name" placeholder="Checklist group name"
+                                    <input type="text" className={HelperService.addInvalid(null, errors?.name)} name="name" placeholder="Checklist group name"
                                         value={checklistGroup ? checklistGroup.name : ''}
                                         onChange={(e) => setChecklistGroup({ ...checklistGroup, name: e.target.value })}
                                     />
-
+                                    <ErrorComponent error={errors?.name} />
                                 </div>
                             </div>
 

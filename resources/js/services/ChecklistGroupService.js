@@ -44,16 +44,12 @@ const storeChecklistGroup = async (formData, token) => {
 };
 
 const updateChecklistGroup = async (checklistGroup, token) => {
-    try {
-        const response = await axios.put(
-            "/api/checklist-groups/" + checklistGroup.id,
-            { name: checklistGroup.name },
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+    const response = await axios.put(
+        "/api/checklist-groups/" + checklistGroup.id,
+        { name: checklistGroup.name },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
 };
 
 const destroyChecklistGroup = async (checklistGroup, token) => {
