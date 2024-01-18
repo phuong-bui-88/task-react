@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import PageService from "@services/PageService.js";
+import TokenService from "@services/TokenService.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
-import PageService from "../../services/PageService.js";
-function EditPageComponent({ onEditPage, token }) {
+import HelperService from "@services/HelperService.js";
+import ErrorComponent from "@components/intergrate/ErrorComponent.jsx";
+
+function EditPageComponent({ onFetchPages }) {
 
     const [page, setPage] = useState(null);
     const { pageId } = useParams();
+    const navigate = useNavigate();
+    const token = TokenService.getToken();
+    const [errors, setErrors] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        onEditPage(page);
+        try {
+            await PageService.updatePage(page, token);
+            onFetchPages();
+            navigate("/home");
+        } catch (error) {
+            setErrors(error.response.data.errors);
+        }
     }
 
     const handleInputChange = (e) => {
@@ -34,12 +47,7 @@ function EditPageComponent({ onEditPage, token }) {
         fetchPage(pageId);
     }, [pageId]);
 
-    // Check if checklistGroup is null before accessing its properties
-    if (page == null) {
-        return <div>Loading...</div>; // Or render a loading indicator
-    }
-
-    return (
+    return (page &&
         <div className="container-lg">
             <div className="row">
                 <div className="col-12">
@@ -52,10 +60,11 @@ function EditPageComponent({ onEditPage, token }) {
                             <div className="card-body">
                                 <div className="mb-3">
                                     <label className="form-label">Title</label>
-                                    <input type="text" className="form-control" name="title" placeholder="Title"
+                                    <input type="text" className={HelperService.addInvalid(null, errors?.title)} name="title" placeholder="Title"
                                         value={page.title ?? ''}
                                         onChange={handleInputChange}
                                     />
+                                    <ErrorComponent error={errors?.title} />
                                 </div>
 
                                 <div className="mb-3">

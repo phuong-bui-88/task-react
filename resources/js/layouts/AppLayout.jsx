@@ -40,12 +40,6 @@ function AppLayout() {
         setLeftSidebarActive(!leftSidebarActive);
     }
 
-    const editPage = async (page) => {
-        const responseData = await PageService.updatePage(page, token);
-        fetchPages();
-        navigate("/home");
-    };
-
     const fetchChecklistGroups = async (isUser = false) => {
         const response = await ChecklistGroupService.getChecklistGroups(
             isUser,
@@ -166,7 +160,7 @@ function AppLayout() {
                     />
                     <Route
                         path="/admin/pages/:pageId/edit"
-                        element={<EditPageComponent onEditPage={editPage} token={token} />}
+                        element={<EditPageComponent onFetchPages={fetchPages} />}
                     />
                     <Route
                         path="/checklists/:checklistId"
