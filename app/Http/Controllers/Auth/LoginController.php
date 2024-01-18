@@ -43,13 +43,8 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        $token = null;
+        $token = $user->createToken('authToken')->plainTextToken;
 
-        if ($user) {
-            $token = $user->createToken('authToken')->plainTextToken;
-        }
-
-        return ($token)
-            ? new JsonResponse(['token' => $token], 202) : new JsonResponse([], 204);
+        return new JsonResponse(['token' => $token], 202);
     }
 }
