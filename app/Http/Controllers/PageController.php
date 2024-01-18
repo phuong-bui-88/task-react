@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PageRequest;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
-use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
@@ -16,14 +15,6 @@ class PageController extends Controller
     {
         $pages = Page::all();
         return PageResource::collection($pages);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -42,14 +33,6 @@ class PageController extends Controller
         $page->update($request->validated());
 
         return new PageResource($page);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     public function welcome()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import ExampleComponent from "../components/ExampleComponent.jsx";
 import HeaderSidebarComponent from "../components/HeaderSidebarComponent.jsx";
@@ -16,7 +16,6 @@ import EditChecklistComponent from "../components/admin/EditChecklistComponent.j
 import ChecklistGroupService from "../services/ChecklistGroupService.js";
 
 import PageService from "../services/PageService.js";
-import TaskService from "../services/TaskService.js";
 import UserService from "../services/UserService.js";
 
 import { useLocation } from "react-router-dom";

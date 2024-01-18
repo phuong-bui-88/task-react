@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user', [App\Http\Controllers\UserController::class, 'show']);
+
+    // PageController routes
+    Route::resource('pages', \App\Http\Controllers\PageController::class)->only(['index', 'show']);
     // Welcome and Consulation routes
     Route::get('welcome', [\App\Http\Controllers\PageController::class, 'welcome']);
     Route::get('consulation', [\App\Http\Controllers\PageController::class, 'consulation']);
-
-    // PageController routes
-    Route::resource('pages', \App\Http\Controllers\PageController::class);
+    Route::middleware(['is_admin'])->group(function () {
+        Route::resource('pages', \App\Http\Controllers\PageController::class)->only(['store', 'update', 'destroy']);
+    });
+    
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
 
     Route::get('checklists/{checklist}', [\App\Http\Controllers\User\ChecklistController::class, 'show'])->name('user.checklist.show');
