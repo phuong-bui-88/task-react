@@ -19,3 +19,5 @@ yarn-error.log
 /.idea
 /.vscode
 /ckeditor5/node_modules
+# Sentry Config File
+.env.sentry-build-plugin

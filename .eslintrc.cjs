@@ -9,7 +9,7 @@ module.exports = {
             env: {
                 node: true,
             },
-            files: [".eslintrc.{js,cjs}, ./ckeditor5/**/*.{js,cjs}"],
+            files: [".eslintrc.{js,cjs}, ./ckeditor5/**/*.{js,cjs,ts}"],
             parserOptions: {
                 sourceType: "script",
             },

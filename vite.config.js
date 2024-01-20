@@ -3,6 +3,19 @@ import path from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ["@workspace/ckeditor5-custom-build"],
+    },
+    build: {
+        commonjsOptions: {
+            include: [/@workspace\/ckeditor5-custom-build/, /node_modules/],
+        },
+        rollupOptions: {
+            input: "./resources/js/app.jsx",
+            external: ["./ckeditor5/build/ckeditor.js"],
+        },
+        sourcemap: true,
+    },
     resolve: {
         alias: {
             "@components": path.resolve(__dirname, "resources/js/components"),

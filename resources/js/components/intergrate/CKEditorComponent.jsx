@@ -1,16 +1,15 @@
-import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
+import React from 'react';
 
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 import MyUploadAdapter from './MyUploadAdapter.js';
-import 'ckeditor5-custom-build/build/ckeditor';
 
 // https://ckeditor.com/docs/ckeditor5/latest/installation/integrations/react.html#integrating-a-build-from-the-online-builder
-// https://stackoverflow.com/a/75251831
 const CKEditorComponent = ({ data, onChange }) => {
 
     return (
         <CKEditor
-            editor={ClassicEditor}
+            editor={Editor}
             data={data}
 
             onChange={(event, editor) => {

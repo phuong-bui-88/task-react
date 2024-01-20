@@ -105,6 +105,14 @@ function EditChecklistComponent({
                             <div className="card-footer">
                                 <div className="col-12">
                                     <button
+                                        type="button"
+                                        onClick={() => {
+                                            throw new Error("Sentry Test Error");
+                                        }}
+                                    >
+                                        Break the world
+                                    </button>
+                                    <button
                                         className="btn btn-primary"
                                         type="submit"
                                     >

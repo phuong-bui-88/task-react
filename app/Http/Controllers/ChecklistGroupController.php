@@ -50,6 +50,7 @@ class ChecklistGroupController extends Controller
      */
     public function update(ChecklistGroupRequest $request, ChecklistGroup $checklistGroup)
     {
+        $a->abcd();
         $checklistGroup->update($request->validated());
 
         return new ChecklistGroupResource($checklistGroup);
