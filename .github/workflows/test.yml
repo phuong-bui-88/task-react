@@ -1,0 +1,47 @@
+name: Tests
+on: [push, pull_request]
+env:
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql/mysql-server:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: testing
+          MYSQL_USER: sail
+          MYSQL_PASSWORD: password
+        ports:
+          - "3306:3306"
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, zip, pcntl, bcmath, gd, pdo_mysql
+          coverage: pcov
+      - name: Install curl
+        run: sudo apt-get install curl iproute2
+      - name: Copy .env
+        run: cp .env.example .env
+      - name: Install dependencies by composer
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader
+      - name: Generate key
+        run: php artisan key:generate
+      - name: Test connect port
+        run: |
+          ss -tuln
+      - name: Run npm install
+        run: npm install
+      - name: Run unit tests
+        run: vendor/bin/phpunit --coverage-clover ./coverage.xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
