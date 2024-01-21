@@ -2,7 +2,10 @@
 
 namespace Tests;
 
+use App\Models\Checklist;
 use App\Models\User;
+use App\Models\ChecklistGroup;
+
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -11,6 +14,7 @@ abstract class TestCase extends BaseTestCase
 
     protected $adminUser;
     protected $user;
+    
 
     public function setUp() : void
     {
@@ -28,5 +32,15 @@ abstract class TestCase extends BaseTestCase
     public function createUser() : User
     {
         return User::factory()->create(['is_admin' => false]);
+    }
+
+    public function createChecklistGroup()
+    {
+        return ChecklistGroup::factory()->create();
+    }
+
+    public function createChecklist($checklistGroup)
+    {
+        return Checklist::factory()->create(['checklist_group_id' => $checklistGroup->id]);
     }
 }

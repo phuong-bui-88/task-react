@@ -24,6 +24,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('consulation', [\App\Http\Controllers\PageController::class, 'consulation']);
     Route::middleware(['is_admin'])->group(function () {
         Route::resource('pages', \App\Http\Controllers\PageController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('checklist-groups', \App\Http\Controllers\ChecklistGroupController::class)
+            ->only(['store', 'update', 'destroy']);
+        Route::resource('checklist-groups/{checklist_group}/checklists', \App\Http\Controllers\ChecklistController::class)
+            ->only(['store', 'update', 'destroy']);    
     });
     
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
@@ -34,10 +38,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('tasks/{task}/complete', [\App\Http\Controllers\TaskController::class, 'complete']);
     Route::resource('checklists/{checklist}/tasks', \App\Http\Controllers\TaskController::class);
     Route::put('checklists/{checklist}/task-positions', [\App\Http\Controllers\TaskController::class, 'updatePosition']);
+    
     // ChecklistController routes
-    Route::resource('checklist-groups/{checklist_group}/checklists', \App\Http\Controllers\ChecklistController::class);
+    Route::resource('checklist-groups/{checklist_group}/checklists', \App\Http\Controllers\ChecklistController::class)
+        ->only(['index', 'show']);
 
-    Route::resource('checklist-groups', \App\Http\Controllers\ChecklistGroupController::class);
+    Route::resource('checklist-groups', \App\Http\Controllers\ChecklistGroupController::class)->only(['index', 'show']);
 
     Route::post('upload', [\App\Http\Controllers\UploadController::class, 'upload']);
 });
