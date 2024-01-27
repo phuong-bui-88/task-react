@@ -11,13 +11,6 @@ use Illuminate\Http\Request;
 
 class ChecklistController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Checklist;
 use App\Models\User;
 use App\Models\ChecklistGroup;
+use App\Models\Task; 
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -42,5 +43,10 @@ abstract class TestCase extends BaseTestCase
     public function createChecklist($checklistGroup)
     {
         return Checklist::factory()->create(['checklist_group_id' => $checklistGroup->id]);
+    }
+
+    public function createTask($checklist)
+    {
+        return Task::factory()->create(['checklist_id' => $checklist->id]);
     }
 }

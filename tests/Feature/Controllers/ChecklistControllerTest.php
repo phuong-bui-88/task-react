@@ -47,6 +47,7 @@ class ChecklistControllerTest extends TestCase
         ]);
     }
 
+    
     public function testShowChecklist()
     {
         $checklistGroup = $this->createChecklistGroup();
@@ -70,6 +71,18 @@ class ChecklistControllerTest extends TestCase
                         ],
                     ],
                 ],
+            ],
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->get(route('checklists.show', [$checklistGroup, $checklist]));
+        
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => [
+                'id' => $checklist->id,
+                'name' => $checklist->name,
+                'tasks' => [],
             ],
         ]);
     }

@@ -21,6 +21,7 @@ class ChecklistGroupControllerTest extends TestCase
     {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
+        $task = $this->createTask($checklist);
 
         // access without token user  
         $response = $this->get('/api/checklist-groups');
@@ -46,6 +47,12 @@ class ChecklistGroupControllerTest extends TestCase
                 ],
             ],
         ]);
+
+                
+        $response = $this->actingAs($this->user)
+                        ->get('/api/checklist-groups');
+        $response->assertStatus(200);
+
     }
 
     /**
