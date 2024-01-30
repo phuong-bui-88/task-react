@@ -65,17 +65,17 @@ class TaskController extends Controller
 
     public function complete(Request $request, Task $task)
     {
-        // $completed = $request->get('completed');
+        $completedAt = $request->get('isCompleted') == true ? now() : null;
         $user = $request->user();
-        $userTask = Task::where('id', $task->id)->where('user_id', $user->id)->first();
+        $userTask = Task::where('task_id', $task->id)->where('user_id', $user->id)->first();
         
         if ($userTask) {
-            $userTask->update(['completed_at' => now()]);
+            $userTask->update(['completed_at' => $completedAt]);
         }
         else {
             $userTask = $task->replicate();
             $userTask->user_id = $user->id;
-            $userTask->completed_at = now();
+            $userTask->completed_at = $completedAt;
             $userTask->task_id = $task->id;
             $userTask->save();
         }

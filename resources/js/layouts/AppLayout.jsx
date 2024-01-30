@@ -52,7 +52,7 @@ function AppLayout() {
         setPages(response);
     };
 
-    const handleCountUserCompletedTasks = (checklistGroupId, checklistId) => {
+    const handleCountUserCompletedTasks = (checklistGroupId, checklistId, checked) => {
         let { groupIndex, checklistIndex } =
             ChecklistGroupService.findIndexesByChecklistId(
                 checklistGroups,
@@ -61,7 +61,7 @@ function AppLayout() {
 
         let newValue =
             checklistGroups[groupIndex].checklists[checklistIndex]
-                .count_user_completed_tasks + 1;
+                .count_user_completed_tasks + checked;
 
         setChecklistGroups((prevChecklistGroups) => {
             const updatedGroups = [...prevChecklistGroups];

@@ -38,13 +38,13 @@ function ChecklistComponent({
     };
 
     const handleCompletedTask = (e, taskId) => {
-        e.stopPropagation();
         token = TokenService.getToken();
 
-        TaskService.completeTask(taskId, token);
+        TaskService.completeTask(taskId, e.target.checked, token);
         fetchChecklist(checklistId);
+        let checked = e.target.checked ? 1 : -1;
 
-        onCountUserCompletedTasks(checklist.checklistGroupId, checklistId);
+        onCountUserCompletedTasks(checklist.checklistGroupId, checklistId, checked);
     };
 
     useEffect(() => {
@@ -80,7 +80,7 @@ function ChecklistComponent({
                                             <input
                                                 className="form-check-input"
                                                 type="checkbox"
-                                                name="completed"
+                                                name="isCompleted"
                                                 value=""
                                                 onChange={(e) => {
                                                     handleCompletedTask(

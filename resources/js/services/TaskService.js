@@ -38,10 +38,10 @@ const updateTask = async (task, token) => {
     return response.data;
 };
 
-const completeTask = async (taskId, token) => {
+const completeTask = async (taskId, isCompleted, token) => {
     const response = await axios.put(
         "/api/tasks/" + taskId + "/complete",
-        { completed: true },
+        { isCompleted: isCompleted },
         { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
