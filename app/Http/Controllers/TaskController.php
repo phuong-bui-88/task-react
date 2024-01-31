@@ -67,19 +67,33 @@ class TaskController extends Controller
     {
         $completedAt = $request->get('isCompleted') == true ? now() : null;
         $user = $request->user();
-        $userTask = Task::where('task_id', $task->id)->where('user_id', $user->id)->first();
+        $this->updateAttribute('completed_at', $completedAt, $task, $user);
         
+        return new TaskResource($task);
+    }
+
+    public function favorite(Request $request, Task $task)
+    {
+        $isFavorite = $request->get('isFavorite', false);
+        $user = $request->user();
+        $userTask = $this->updateAttribute('is_favorite', $isFavorite, $task, $user);
+        
+        return new TaskResource($userTask);
+    }
+
+    public function updateAttribute($attributeName, $attributeValue, Task $task, $user)
+    {
+        $userTask = Task::where('task_id', $task->id)->where('user_id', $user->id)->first();
         if ($userTask) {
-            $userTask->update(['completed_at' => $completedAt]);
+            $userTask->update([$attributeName => $attributeValue]);
         }
         else {
             $userTask = $task->replicate();
             $userTask->user_id = $user->id;
-            $userTask->completed_at = $completedAt;
+            $userTask->{$attributeName} = $attributeValue;
             $userTask->task_id = $task->id;
             $userTask->save();
         }
-        
-        return new TaskResource($task);
+        return $userTask;
     }
 }

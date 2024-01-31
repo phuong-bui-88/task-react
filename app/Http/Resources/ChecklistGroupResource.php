@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Checklist;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,6 +34,13 @@ class ChecklistGroupResource extends JsonResource
             }
             return $item;
         });
+
+        // count favorite task
+        if ($isUser) {
+            $countUserFavorite = Task::where('user_id', $user->id)
+                ->where('is_favorite', true)
+                ->count();
+        }
 
         return [
             'id' => $this->id,

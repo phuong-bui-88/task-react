@@ -5,7 +5,7 @@ import React from "react";
 import LeftSidebarAdminComponent from "./admin/LeftSidebarAdminComponent.jsx";
 import LeftSidebarUserComponent from "./user/LeftSidebarUserComponent.jsx";
 
-function LeftSidebarComponent({ checklistGroups, user, pages }) {
+function LeftSidebarComponent({ checklistGroups, analyticChecklistGroups, user, pages }) {
 
     return (
         <div>
@@ -24,7 +24,7 @@ function LeftSidebarComponent({ checklistGroups, user, pages }) {
                                             <LeftSidebarAdminComponent checklistGroups={checklistGroups} pages={pages} />
                                         ) : (
                                             <>
-                                                <LeftSidebarUserComponent checklistGroups={checklistGroups} />
+                                                <LeftSidebarUserComponent checklistGroups={checklistGroups} analyticChecklistGroups={analyticChecklistGroups} />
                                             </>
                                         )}
 

@@ -36,6 +36,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // TaskController routes
     Route::put('tasks/{task}/complete', [\App\Http\Controllers\TaskController::class, 'complete'])->name('tasks.complete');
+    Route::put('tasks/{task}/favorite', [\App\Http\Controllers\TaskController::class, 'favorite'])->name('tasks.favorite');
+    
     Route::resource('checklists/{checklist}/tasks', \App\Http\Controllers\TaskController::class);
     Route::put('checklists/{checklist}/task-positions', [\App\Http\Controllers\TaskController::class, 'updatePosition'])->name('tasks.updatePosition');
     

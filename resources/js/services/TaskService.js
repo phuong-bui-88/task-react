@@ -47,6 +47,15 @@ const completeTask = async (taskId, isCompleted, token) => {
     return response.data;
 };
 
+const favoriteTask = async (taskId, isFavorite, token) => {
+    const response = await axios.put(
+        "/api/tasks/" + taskId + "/favorite",
+        { isFavorite: isFavorite },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+};
+
 const destroyTask = async (task, token) => {
     const response = await axios.delete(
         "/api/checklists/" + task.checklistId + "/tasks/" + task.id,
@@ -61,5 +70,6 @@ export default {
     storeTask,
     updateTask,
     completeTask,
+    favoriteTask,
     destroyTask,
 };

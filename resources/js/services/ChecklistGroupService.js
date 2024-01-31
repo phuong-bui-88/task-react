@@ -19,7 +19,7 @@ const getChecklistGroups = async (isUser = false, token) => {
             headers: { Authorization: `Bearer ${token}` },
         });
 
-        return response.data.data;
+        return response.data;
     } catch (error) {
         throw error.response.data;
     }

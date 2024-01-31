@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChecklistGroupRequest;
 use App\Http\Resources\ChecklistGroupResource;
 use App\Models\ChecklistGroup;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class ChecklistGroupController extends Controller
@@ -20,7 +21,21 @@ class ChecklistGroupController extends Controller
             $query->whereNull('user_id');
         }]);
 
-        return ChecklistGroupResource::collection($checklistGroups->get());
+        // count favorite task
+        $cgr = ChecklistGroupResource::collection($checklistGroups->get());
+        $isUser = $request->has('is_user') && $request->is_user;
+
+        if ($isUser) {
+            $countUserFavorite = Task::where('user_id', $request->user()->id)
+                ->where('is_favorite', true)
+                ->count();
+                
+            $cgr->additional(['analytic' => [
+                'count_user_favorite' => $countUserFavorite,
+            ]]);
+        }
+
+        return $cgr;             
     }
 
     /**

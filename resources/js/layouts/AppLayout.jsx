@@ -30,6 +30,7 @@ function AppLayout() {
 
     const [user, setUser] = useState(null);
     const [checklistGroups, setChecklistGroups] = useState(null);
+    const [analyticChecklistGroups, setAnalyticChecklistGroups] = useState(null);
     const [pages, setPages] = useState();
     const [leftSidebarActive, setLeftSidebarActive] = useState(true);
 
@@ -44,7 +45,8 @@ function AppLayout() {
             isUser,
             token
         );
-        setChecklistGroups(response);
+        setChecklistGroups(response.data);
+        setAnalyticChecklistGroups(response.analytic);
     };
 
     const fetchPages = async () => {
@@ -81,6 +83,17 @@ function AppLayout() {
             };
             return updatedGroups;
         });
+    };
+
+    const handleUserFaviroteTasks = (keyName, checked) => {
+        let newValue = analyticChecklistGroups[keyName] + checked;
+
+        setAnalyticChecklistGroups((prevState) => {
+            return {
+                ...prevState,
+                [keyName]: newValue,
+            }
+        })
     };
 
     useEffect(() => {
@@ -125,6 +138,7 @@ function AppLayout() {
                 >
                     <LeftSidebarComponent
                         checklistGroups={checklistGroups}
+                        analyticChecklistGroups={analyticChecklistGroups}
                         user={user}
                         pages={pages}
                     />
@@ -170,6 +184,9 @@ function AppLayout() {
                                 onFetchChecklistGroup={fetchChecklistGroups}
                                 onCountUserCompletedTasks={
                                     handleCountUserCompletedTasks
+                                }
+                                onUserFaviroteTasks={
+                                    handleUserFaviroteTasks
                                 }
                             />
                         }

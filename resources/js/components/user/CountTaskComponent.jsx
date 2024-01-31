@@ -35,7 +35,7 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
 
     return (
         <div className="card m-3">
-            <div className="card-header">Count Task Component</div>
+            <div className="card-header">Store Review</div>
 
             <div className="card-body">
                 <div className="row text-center">
@@ -59,7 +59,7 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
                                             role="progressbar"
                                             style={{
                                                 width: `${(checklist.count_user_completed_tasks /
-                                                        checklist.count_tasks) *
+                                                    checklist.count_tasks) *
                                                     100
                                                     }%`,
                                             }}
