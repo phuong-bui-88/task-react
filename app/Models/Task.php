@@ -9,7 +9,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'checklist_id', 'position', 'completed_at', 'is_favorite', 'is_my_day', 'remain_me', 'note'];
+    protected $fillable = ['name', 'description', 'checklist_id', 'position', 'completed_at', 'is_favorite', 'is_my_day', 'due_date', 'note'];
 
     public function checklist()
     {

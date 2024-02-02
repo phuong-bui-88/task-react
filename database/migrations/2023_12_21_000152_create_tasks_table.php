@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('task_id')->nullable();
             $table->boolean('is_favorite')->default(false);
             $table->boolean('is_my_day')->default(false);
-            $table->string('remain_me')->nullable();
+            $table->string('due_date')->nullable();
             $table->string('note')->nullable();
 
             $table->timestamps();

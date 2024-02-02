@@ -31,6 +31,7 @@ class TaskResource extends JsonResource
             'checklistId' => $this->checklist_id,
             'is_completed' => $completedUserTask,
             'is_favorite' => $userTask?->is_favorite,
+            'due_date' => is_numeric($userTask?->due_date) ? date("Y-m-d H:i:s", $userTask?->due_date) : null,
         ];
     }
 }

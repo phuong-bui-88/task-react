@@ -56,6 +56,16 @@ const favoriteTask = async (taskId, isFavorite, token) => {
     return response.data;
 };
 
+// post to due date task
+const dueDateTask = async (taskId, dueDate, token) => {
+    const response = await axios.put(
+        "/api/tasks/" + taskId + "/due-date",
+        { dueDate: dueDate },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+};
+
 const destroyTask = async (task, token) => {
     const response = await axios.delete(
         "/api/checklists/" + task.checklistId + "/tasks/" + task.id,
@@ -71,5 +81,6 @@ export default {
     updateTask,
     completeTask,
     favoriteTask,
+    dueDateTask,
     destroyTask,
 };

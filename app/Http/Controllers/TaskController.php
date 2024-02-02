@@ -81,6 +81,25 @@ class TaskController extends Controller
         return new TaskResource($userTask);
     }
 
+    public function dueDate(Request $request, Task $task)
+    {
+        $dueDate = $request->get('dueDate', null);
+        $time = '';
+
+        if ($dueDate != null) {    
+            $oldTimeZone = date_default_timezone_get();
+            date_default_timezone_set('UTC');
+            $time = strtotime($dueDate);
+            date_default_timezone_set($oldTimeZone);
+        };
+
+        $user = $request->user();
+        $userTask = $this->updateAttribute('due_date', $time, $task, $user);
+        
+        return new TaskResource($userTask);
+        
+    }
+
     public function updateAttribute($attributeName, $attributeValue, Task $task, $user)
     {
         $userTask = Task::where('task_id', $task->id)->where('user_id', $user->id)->first();

@@ -79,6 +79,7 @@ function ChecklistComponent({
         fetchChecklist(checklistId);
         onFetchChecklistGroup(true);
         setExpandedTasks({});
+        setExpandedTask({ task: null, status: null, index: null });
     }, [checklistId]);
 
     useEffect(() => {

@@ -139,7 +139,7 @@ class TaskControllerTest extends TestCase
         $task = $this->createTask($checklist);    
 
         $response = $this->actingAs($this->user)
-            ->put(route('tasks.complete', $task));
+            ->put(route('tasks.complete', $task), ['isCompleted' => true]);
 
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson(['data' => [
@@ -149,5 +149,17 @@ class TaskControllerTest extends TestCase
                 'checklistId' => $task->checklist_id,
                 'is_completed' => true,
             ]]);
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.complete', $task), ['isCompleted' => false]);    
+        
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(['data' => [
+                'id' => $task->id,
+                'name' => $task->name,
+                'description' => $task->description,
+                'checklistId' => $task->checklist_id,
+                'is_completed' => false,
+            ]]);    
     }
 }
