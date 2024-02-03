@@ -10,10 +10,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
+use Carbon\Carbon;
 
 class TaskControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
 
     /**
      * Test storing a new task.
@@ -140,7 +142,7 @@ class TaskControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.complete', $task), ['isCompleted' => true]);
-
+        
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson(['data' => [
                 'id' => $task->id,
@@ -161,5 +163,104 @@ class TaskControllerTest extends TestCase
                 'checklistId' => $task->checklist_id,
                 'is_completed' => false,
             ]]);    
+    }
+
+    
+    /**
+     * Test favorite a task.
+     *
+     * @return void
+     */
+    public function testFavoriteTask()
+    {
+        $checklistGroup = $this->createChecklistGroup();
+        $checklist = $this->createChecklist($checklistGroup);
+        $task = $this->createTask($checklist);    
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => true]);
+
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(['data' => [
+                'name' => $task->name,
+                'checklistId' => $checklist->id,
+                'is_favorite' => 1,
+            ]]);
+
+        $this->assertDatabaseHas('tasks', [
+            'task_id' => $task->id,
+            'user_id' => $this->user->id,
+            'is_favorite' => 1,
+        ]);
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => false]);
+        
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertJson(['data' => [
+                'name' => $task->name,
+                'checklistId' => $checklist->id,
+                'is_favorite' => 0
+            ]]);
+
+        $this->assertDatabaseHas('tasks', [
+            'task_id' => $task->id,
+            'user_id' => $this->user->id,
+            'is_favorite' => 0,
+        ]);
+    }
+
+    public function testDualDateTask() {
+        $checklistGroup = $this->createChecklistGroup();
+        $checklist = $this->createChecklist($checklistGroup);
+        $task = $this->createTask($checklist);    
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.dueDate', ['task' => $task->id]), ['dueDate' => '2021-12-31 00:20:00']);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('tasks', [
+            'task_id' => $task->id,
+            'user_id' => $this->user->id,
+            'due_date' => (new Carbon('2021-12-31 00:20:00'))->timestamp,
+        ]);       
+    }
+
+    public function testGetFavoriteTask() {
+        $checklistGroup = $this->createChecklistGroup();
+        $checklist = $this->createChecklist($checklistGroup);
+        $task1 = $this->createTask($checklist);
+        $task2 = $this->createTask($checklist);
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.favorite', ['task' => $task1->id]), ['isFavorite' => true]);
+        
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.favorite', ['task' => $task2->id]), ['isFavorite' => true]);
+
+
+        $response = $this->actingAs($this->user)
+            ->get(route('tasks.favoriteTasks'));    
+
+        $response->assertStatus(200);
+        $this->assertCount(2, $response['data']);
+        $this->assertEquals($response['data'][0]['id'], $task1->id);
+        $this->assertEquals($response['data'][1]['id'], $task2->id);
+    }
+
+    public function testNoteTask() {
+        $checklistGroup = $this->createChecklistGroup();
+        $checklist = $this->createChecklist($checklistGroup);
+        $task = $this->createTask($checklist);    
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.note', ['task' => $task->id]), ['note' => 'This is a note']);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('tasks', [
+            'task_id' => $task->id,
+            'user_id' => $this->user->id,
+            'note' => 'This is a note',
+        ]);
     }
 }

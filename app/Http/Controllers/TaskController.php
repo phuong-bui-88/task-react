@@ -78,7 +78,7 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('is_favorite', $isFavorite, $task, $user);
         
-        return new TaskResource($userTask);
+        return new TaskResource($task);
     }
 
     public function dueDate(Request $request, Task $task)
@@ -87,6 +87,7 @@ class TaskController extends Controller
         $time = '';
 
         if ($dueDate != null) {    
+            // oldTimeZone is UTC
             $oldTimeZone = date_default_timezone_get();
             date_default_timezone_set('UTC');
             $time = strtotime($dueDate);
@@ -96,7 +97,7 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('due_date', $time, $task, $user);
         
-        return new TaskResource($userTask);
+        return new TaskResource($task);
         
     }
 
@@ -134,6 +135,6 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('note', $note, $task, $user);
         
-        return new TaskResource($userTask);
+        return new TaskResource($task);
     }
 }
