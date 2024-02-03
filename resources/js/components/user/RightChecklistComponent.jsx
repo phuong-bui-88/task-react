@@ -10,6 +10,9 @@ import React, { useEffect, useState } from 'react';
 
 const RightChecklistComponent = ({ expandedTask, onFavoritedTask }) => {
     const [date, setDate] = useState(null);
+    const [expandedNote, setExpandedNote] = useState(false);
+    const [note, setNote] = useState('');
+
     const dateType = {
         TODAY: 'Today',
         TOMORROW: 'Tomorrow',
@@ -20,9 +23,12 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask }) => {
     useEffect(() => {
         if (!expandedTask.task) return;
 
-        console.log(expandedTask, 'expandedTask');
         if (expandedTask.task.due_date) {
             setDate(new Date(expandedTask.task.due_date));
+        }
+
+        if (expandedTask.task.note) {
+            setNote(expandedTask.task.note);
         }
     }, [expandedTask]);
 
@@ -56,6 +62,22 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask }) => {
         setDate(null);
         let token = TokenService.getToken();
         TaskService.dueDateTask(expandedTask.task.id, null, token);
+    }
+
+    const showNoteTask = (e) => {
+        e.preventDefault();
+        setExpandedNote(!expandedNote);
+    }
+
+    const saveNote = () => {
+        let note = document.getElementById('note-task').value;
+        let token = TokenService.getToken();
+        TaskService.noteTask(expandedTask.task.id, note, token);
+        setExpandedNote(false);
+    }
+
+    const changeNote = (e) => {
+        setNote(e.target.value);
     }
 
     return expandedTask.status && (
@@ -126,7 +148,20 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask }) => {
 
             <div className='card m-3'>
                 <div className="card-body">
-                    Note
+                    <a href="#" className="info-color" onClick={(e) => showNoteTask(e)}>
+                        Note
+                    </a>
+                    {(expandedNote) ?
+                        <div>
+                            <textarea className="form-control mt-3" id="note-task" rows="3" onChange={(e) => changeNote(e)} value={note}></textarea>
+                            <button type="button" className="btn btn-primary mt-3 btn-info" onClick={saveNote}>Save</button>
+                        </div>
+                        :
+                        <div>
+                            {note}
+                            {(note) && <a href="#" className="d-block info-color" onClick={(e) => showNoteTask(e)}>Edit</a>}
+                        </div>
+                    }
                 </div>
             </div>
         </div >

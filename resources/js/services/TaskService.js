@@ -56,6 +56,23 @@ const favoriteTask = async (taskId, isFavorite, token) => {
     return response.data;
 };
 
+const noteTask = async (taskId, note, token) => {
+    const response = await axios.put(
+        "/api/tasks/" + taskId + "/note",
+        { note: note },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+};
+
+// get favorite tasks
+const getFavoriteTasks = async (token) => {
+    const response = await axios.get("/api/favorite-tasks", {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.data;
+};
+
 // post to due date task
 const dueDateTask = async (taskId, dueDate, token) => {
     const response = await axios.put(
@@ -76,11 +93,13 @@ const destroyTask = async (task, token) => {
 
 export default {
     getTasks,
+    getFavoriteTasks,
     getTask,
     storeTask,
     updateTask,
     completeTask,
     favoriteTask,
+    noteTask,
     dueDateTask,
     destroyTask,
 };

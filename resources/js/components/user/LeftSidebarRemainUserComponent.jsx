@@ -1,5 +1,6 @@
 import React from 'react';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import { Link } from 'react-router-dom';
 
 const LeftSidebarRemainUserComponent = ({ analyticChecklistGroups }) => {
     return analyticChecklistGroups && (
@@ -13,12 +14,12 @@ const LeftSidebarRemainUserComponent = ({ analyticChecklistGroups }) => {
                 </a>
             </li>
             <li className="nav-item">
-                <a href="#" className="nav-link ps-4">
+                <Link className="nav-link ps-4" to={`/important`}>
                     <small>
                         <ChecklistIcon className="pe-2" />Important
                         <span className="badge bg-info ms-2">{analyticChecklistGroups.count_user_favorite}</span>
                     </small>
-                </a>
+                </Link>
             </li>
             <li className="nav-item">
                 <a href="#" className="nav-link ps-4">

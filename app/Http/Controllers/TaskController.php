@@ -115,4 +115,25 @@ class TaskController extends Controller
         }
         return $userTask;
     }
+
+    /**
+     * Get favorite tasks
+     */
+    public function favoriteTasks(Request $request) {
+        $request->merge(['getFavoriteTasks' => true]);
+        $user = $request->user();
+        $taskIds = $user->tasks()->where('is_favorite', true)->get()->pluck(['task_id']);
+        $tasks = Task::whereIn('id', $taskIds)->get();
+
+        return TaskResource::collection($tasks);
+    }
+
+    public function note(Request $request, Task $task)
+    {
+        $note = $request->get('note', null);
+        $user = $request->user();
+        $userTask = $this->updateAttribute('note', $note, $task, $user);
+        
+        return new TaskResource($userTask);
+    }
 }

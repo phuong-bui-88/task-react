@@ -13,11 +13,11 @@ import CountTaskComponent from "./CountTaskComponent";
 import RightChecklistComponent from "./RightChecklistComponent";
 
 function ChecklistComponent({
-    token,
     checklistGroups,
     onFetchChecklistGroup,
     onCountUserCompletedTasks,
     onUserFaviroteTasks,
+    tasksList,
 }) {
     const { checklistId } = useParams();
     const [checklist, setChecklist] = useState(null);
@@ -43,6 +43,8 @@ function ChecklistComponent({
     };
 
     const fetchChecklist = async (checklistId) => {
+        let token = TokenService.getToken();
+
         const response = await CheckListService.showChecklist(
             checklistId,
             token
@@ -52,7 +54,7 @@ function ChecklistComponent({
     };
 
     const handleCompletedTask = (e, taskId) => {
-        token = TokenService.getToken();
+        let token = TokenService.getToken();
 
         TaskService.completeTask(taskId, e.target.checked, token);
         fetchChecklist(checklistId);
@@ -62,9 +64,9 @@ function ChecklistComponent({
     };
 
     const handleFavoritedTask = (e, task, index) => {
-        e.target.type = 'favorite'
+        e.target.type = 'favorite';
         e.preventDefault();
-        token = TokenService.getToken();
+        let token = TokenService.getToken();
         TaskService.favoriteTask(task.id, !task.is_favorite, token);
 
         task.is_favorite = !task.is_favorite;
@@ -73,37 +75,52 @@ function ChecklistComponent({
         })
 
         onUserFaviroteTasks('count_user_favorite', (task.is_favorite == true ? 1 : -1));
+
+        if (tasksList) {
+            removeTask(index);
+        }
+    };
+
+    // remove tasks and null expandedTask
+    const removeTask = (index) => {
+        tasks.splice(index, 1);
+        setTasks(tasks);
+        setExpandedTask({ task: null, status: null, index: null });
     };
 
     useEffect(() => {
-        fetchChecklist(checklistId);
-        onFetchChecklistGroup(true);
+        if (checklistId) {
+            fetchChecklist(checklistId);
+            onFetchChecklistGroup(true);
+        }
         setExpandedTasks({});
         setExpandedTask({ task: null, status: null, index: null });
     }, [checklistId]);
 
     useEffect(() => {
-        if (checklist) {
+        if (checklist || tasksList) {
+            let tasksMap = (checklist) ? checklist.tasks : tasksList;
             let tasks = [];
-            checklist.tasks.forEach((task, index) => {
+            tasksMap.forEach((task, index) => {
                 tasks[index] = task;
             });
 
             setTasks(tasks);
         }
-    }, [checklist]);
+    }, [checklist, tasksList]);
 
-    return checklist && tasks ? (
+    return tasks && (
         <div className="row col-12">
             <div className="col-8">
-                <CountTaskComponent
+
+                {checklist && (<CountTaskComponent
                     checklistGroups={checklistGroups}
                     checklist={checklist}
-                />
+                />)}
 
                 <div className="card m-3">
                     <div className="card-header">
-                        <h3>{checklist.name}</h3>
+                        <h3>{(checklist) ? checklist.name : 'Important'}</h3>
                     </div>
                     <div className="card-body">
                         <table className="table table-responsive">
@@ -132,7 +149,16 @@ function ChecklistComponent({
                                                     checked={tasks[index].is_completed}
                                                 />
                                             </td>
-                                            <td className="w-75">{tasks[index].name}</td>
+                                            <td className="w-75">
+                                                {tasks[index].name}
+                                                {(tasksList) &&
+                                                    <small className="d-block">
+                                                        <i>{tasks[index].checklist_name}
+                                                            {(tasks[index].due_date) && ' / ' +
+                                                                new Date(tasks[index].due_date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                                                            }</i></small>
+                                                }
+                                            </td>
                                             <td className="align-middle">
                                                 {expandedTasks[index] ? (
                                                     <ExpandLessIcon />
@@ -169,9 +195,7 @@ function ChecklistComponent({
 
             <RightChecklistComponent expandedTask={expandedTask} onFavoritedTask={handleFavoritedTask} />
         </div>
-    ) : (
-        ""
-    );
+    )
 }
 
 export default ChecklistComponent;

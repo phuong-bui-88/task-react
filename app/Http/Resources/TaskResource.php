@@ -29,9 +29,11 @@ class TaskResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'checklistId' => $this->checklist_id,
+            'checklist_name' => $this->when($request->has('getFavoriteTasks'), $this->checklist->name),
             'is_completed' => $completedUserTask,
             'is_favorite' => $userTask?->is_favorite,
             'due_date' => is_numeric($userTask?->due_date) ? date("Y-m-d H:i:s", $userTask?->due_date) : null,
+            'note' => $userTask?->note,
         ];
     }
 }

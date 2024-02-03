@@ -19,6 +19,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // PageController routes
     Route::resource('pages', \App\Http\Controllers\PageController::class)->only(['index', 'show']);
+    // get favorite tasks
+    Route::get('favorite-tasks', [\App\Http\Controllers\TaskController::class, 'favoriteTasks'])->name('tasks.favoriteTasks');
+
     // Welcome and Consulation routes
     Route::get('welcome', [\App\Http\Controllers\PageController::class, 'welcome']);
     Route::get('consulation', [\App\Http\Controllers\PageController::class, 'consulation']);
@@ -38,7 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('tasks/{task}/complete', [\App\Http\Controllers\TaskController::class, 'complete'])->name('tasks.complete');
     Route::put('tasks/{task}/favorite', [\App\Http\Controllers\TaskController::class, 'favorite'])->name('tasks.favorite');
     Route::put('tasks/{task}/due-date', [\App\Http\Controllers\TaskController::class, 'dueDate'])->name('tasks.dueDate');
-    
+    Route::put('tasks/{task}/note', [\App\Http\Controllers\TaskController::class, 'note'])->name('tasks.note');
+
 
     Route::resource('checklists/{checklist}/tasks', \App\Http\Controllers\TaskController::class);
     Route::put('checklists/{checklist}/task-positions', [\App\Http\Controllers\TaskController::class, 'updatePosition'])->name('tasks.updatePosition');

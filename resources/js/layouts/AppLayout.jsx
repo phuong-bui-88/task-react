@@ -23,6 +23,7 @@ import PageComponent from "../components/PageComponent.jsx";
 import EditPageComponent from "../components/admin/EditPageComponent.jsx";
 import UserListComponent from "../components/admin/UserListComponent.jsx";
 import ChecklistComponent from "../components/user/ChecklistComponent.jsx";
+import FavoriteTaskComponent from "@components/user/FavoriteTaskComponent.jsx";
 
 function AppLayout() {
     const navigate = useNavigate();
@@ -168,6 +169,10 @@ function AppLayout() {
                         element={<PageComponent pageId={2} token={token} />}
                     />
                     <Route
+                        path="/important"
+                        element={<FavoriteTaskComponent onCountUserCompletedTasks={handleCountUserCompletedTasks} onUserFaviroteTasks={handleUserFaviroteTasks} />}
+                    />
+                    <Route
                         path="/admin/users"
                         element={<UserListComponent token={token} />}
                     />
@@ -179,7 +184,6 @@ function AppLayout() {
                         path="/checklists/:checklistId"
                         element={
                             <ChecklistComponent
-                                token={token}
                                 checklistGroups={checklistGroups}
                                 onFetchChecklistGroup={fetchChecklistGroups}
                                 onCountUserCompletedTasks={
