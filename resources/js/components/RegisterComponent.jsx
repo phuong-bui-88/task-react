@@ -35,7 +35,7 @@ function RegisterComponent() {
             const token = await UserService.registerUser(formJson);
             localStorage.setItem('token', token);
 
-            navigate('/home');
+            navigate('/dashboard');
         } catch (error) {
             setErrors(error.errors);
         }

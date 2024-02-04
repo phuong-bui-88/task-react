@@ -29,7 +29,7 @@ function LoginComponent() {
             const token = await UserService.loginUser(formJson);
             localStorage.setItem('token', token);
 
-            navigate('/home');
+            navigate('/dashboard');
         } catch (error) {
             setErrors(error.errors);
         }
@@ -40,7 +40,7 @@ function LoginComponent() {
         () => {
             const token = localStorage.getItem('token');
             if (token) {
-                navigate('/home');
+                navigate('/dashboard');
             }
         }, []
     )

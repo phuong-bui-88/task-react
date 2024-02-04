@@ -231,6 +231,7 @@ function AppLayout() {
                     <Route path="/admin/page" element={<ExampleComponent />} />
                     <Route path="/register" element={<RegisterComponent />} />
                     <Route path="/login" element={<LoginComponent />} />
+                    <Route path="/dashboard" element={<ExampleComponent />} />
                 </Routes>
             </div>
         </div>

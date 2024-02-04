@@ -21,7 +21,7 @@ function EditPageComponent({ onFetchPages }) {
         try {
             await PageService.updatePage(page, token);
             onFetchPages();
-            navigate("/home");
+            navigate("/dashboard");
         } catch (error) {
             setErrors(error.response.data.errors);
         }

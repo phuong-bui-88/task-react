@@ -33,7 +33,7 @@ function CreateChecklistComponent({ checklistGroups, onFetchChecklistGroups }) {
             );
 
             onFetchChecklistGroups();
-            navigate("/home");
+            navigate("/dashboard");
         }
         catch (error) {
             setErrors(error.response.data.errors);

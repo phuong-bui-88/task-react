@@ -28,7 +28,7 @@ function EditChecklistComponent({
             );
 
             onFetchChecklistGroups();
-            navigate("/home");
+            navigate("/dashboard");
         }
         catch (error) {
             setErrors(error.response.data.errors);
@@ -51,7 +51,7 @@ function EditChecklistComponent({
 
             onFetchChecklistGroups();
 
-            navigate("/home");
+            navigate("/dashboard");
         }
         catch (error) {
             setErrors(error.response.data.errors);

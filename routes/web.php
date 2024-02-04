@@ -13,14 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes(['confirm' => false, 'verify' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // Route::get('/home', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('home');
 
-Route::view('/{path?}', 'home')
-    ->where('path', '.*');
+Route::get('/{any?}', function () {
+    return view('welcome');
+})->where('any', '.*');
+
