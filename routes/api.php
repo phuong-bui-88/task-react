@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('tasks/{task}/favorite', [\App\Http\Controllers\TaskController::class, 'favorite'])->name('tasks.favorite');
     Route::put('tasks/{task}/due-date', [\App\Http\Controllers\TaskController::class, 'dueDate'])->name('tasks.dueDate');
     Route::put('tasks/{task}/note', [\App\Http\Controllers\TaskController::class, 'note'])->name('tasks.note');
+    Route::put('tasks/{task}/remind-at', [\App\Http\Controllers\TaskController::class, 'remindAt'])->name('tasks.remindAt');
 
 
     Route::resource('checklists/{checklist}/tasks', \App\Http\Controllers\TaskController::class);

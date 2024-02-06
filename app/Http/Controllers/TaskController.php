@@ -84,21 +84,36 @@ class TaskController extends Controller
     public function dueDate(Request $request, Task $task)
     {
         $dueDate = $request->get('dueDate', null);
-        $time = '';
-
-        if ($dueDate != null) {    
-            // oldTimeZone is UTC
-            $oldTimeZone = date_default_timezone_get();
-            date_default_timezone_set('UTC');
-            $time = strtotime($dueDate);
-            date_default_timezone_set($oldTimeZone);
-        };
+        $time = $this->changeDateTimeToTimestamp($dueDate);
 
         $user = $request->user();
         $userTask = $this->updateAttribute('due_date', $time, $task, $user);
         
-        return new TaskResource($task);
+        return new TaskResource($task);   
+    }
+
+    public function remindAt(Request $request, Task $task)
+    {
+        $remindAt = $request->get('remindAt', null);
+        $time = $this->changeDateTimeToTimestamp($remindAt);
+
+        $user = $request->user();
+        $userTask = $this->updateAttribute('remind_at', $time, $task, $user);
         
+        return new TaskResource($task);   
+    }
+
+    public function changeDateTimeToTimestamp($dateTime)
+    {
+        $time = '';
+        if ($dateTime != null) {    
+            $oldTimeZone = date_default_timezone_get();
+            date_default_timezone_set('UTC');
+            $time = strtotime($dateTime);
+            date_default_timezone_set($oldTimeZone);
+        };
+        
+        return $time;
     }
 
     public function updateAttribute($attributeName, $attributeValue, Task $task, $user)

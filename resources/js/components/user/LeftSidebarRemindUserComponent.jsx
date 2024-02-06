@@ -1,8 +1,8 @@
-import React from 'react';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-const LeftSidebarRemainUserComponent = ({ analyticChecklistGroups }) => {
+const LeftSidebarRemindUserComponent = ({ analyticChecklistGroups }) => {
     return analyticChecklistGroups && (
         <ul className="nav-group-items">
             <li className="nav-item">
@@ -33,4 +33,4 @@ const LeftSidebarRemainUserComponent = ({ analyticChecklistGroups }) => {
     );
 };
 
-export default LeftSidebarRemainUserComponent;
+export default LeftSidebarRemindUserComponent;

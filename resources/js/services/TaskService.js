@@ -73,6 +73,15 @@ const getFavoriteTasks = async (token) => {
     return response.data.data;
 };
 
+const remindAtTask = async (taskId, remindAt, token) => {
+    const response = await axios.put(
+        "/api/tasks/" + taskId + "/remind-at",
+        { remindAt: remindAt },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+};
+
 // post to due date task
 const dueDateTask = async (taskId, dueDate, token) => {
     const response = await axios.put(
@@ -98,6 +107,7 @@ export default {
     storeTask,
     updateTask,
     completeTask,
+    remindAtTask,
     favoriteTask,
     noteTask,
     dueDateTask,

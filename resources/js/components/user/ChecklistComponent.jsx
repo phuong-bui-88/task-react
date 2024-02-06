@@ -81,6 +81,12 @@ function ChecklistComponent({
         }
     };
 
+    const handleUpdateExpandTask = (expandTask) => {
+        setTasks((prevState) => {
+            return prevState.map((taskItem, i) => (i == expandTask.index ? expandTask.task : taskItem));
+        })
+    }
+
     // remove tasks and null expandedTask
     const removeTask = (index) => {
         tasks.splice(index, 1);
@@ -193,7 +199,7 @@ function ChecklistComponent({
                 </div>
             </div>
 
-            <RightChecklistComponent expandedTask={expandedTask} onFavoritedTask={handleFavoritedTask} />
+            <RightChecklistComponent expandedTask={expandedTask} onFavoritedTask={handleFavoritedTask} onUpdateExpandTask={handleUpdateExpandTask} />
         </div>
     )
 }

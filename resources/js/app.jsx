@@ -9,7 +9,6 @@ import AppLayout from "./layouts/AppLayout.jsx";
 
 import * as Sentry from "@sentry/react";
 
-
 Sentry.init({
     dsn: "https://6696d6a49b5e059769ca0cfa9814639f@o4506591483068416.ingest.sentry.io/4506591487328256",
     integrations: [

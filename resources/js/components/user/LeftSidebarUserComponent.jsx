@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 // https://mui.com/material-ui/material-icons/?query=Dash
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import LeftSidebarRemainUserComponent from "./LeftSidebarRemainUserComponent";
+import LeftSidebarRemindUserComponent from "./LeftSidebarRemindUserComponent";
 
 function LeftSidebarUserComponent({ checklistGroups, analyticChecklistGroups }) {
     const [isActive, setIsActive] = useState(false);
@@ -19,7 +19,7 @@ function LeftSidebarUserComponent({ checklistGroups, analyticChecklistGroups }) 
 
     return (
         <div>
-            <LeftSidebarRemainUserComponent analyticChecklistGroups={analyticChecklistGroups} />
+            <LeftSidebarRemindUserComponent analyticChecklistGroups={analyticChecklistGroups} />
 
             {checklistGroups && checklistGroups.map((checklistGroup) => (
                 <li key={checklistGroup.id}>
