@@ -100,11 +100,15 @@ function AppLayout() {
     useEffect(() => {
         const fetchUser = async (token) => {
             const response = await UserService.getUser(token);
+            if (!response) {
+                localStorage.removeItem("token");
+                navigate("/login");
+                return;
+            }
             setUser(response);
         };
 
         // or page is register or login
-
         if (!token && location.pathname != "/register") {
             UserService.logoutUser();
             setUser(null);
@@ -185,6 +189,7 @@ function AppLayout() {
                         element={
                             <ChecklistComponent
                                 checklistGroups={checklistGroups}
+                                user={user}
                                 onFetchChecklistGroup={fetchChecklistGroups}
                                 onCountUserCompletedTasks={
                                     handleCountUserCompletedTasks

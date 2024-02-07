@@ -25,7 +25,8 @@ class User extends Authenticatable
         'is_admin',
         'last_action_at',
         'user_id',
-        'task_id'
+        'task_id',
+        'subscribe',
     ];
 
     /**
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function isSubscribed()
+    {
+        return $this->subscribe;
     }
 }

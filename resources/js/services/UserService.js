@@ -7,11 +7,15 @@ const getUsers = async (currentPage, token) => {
 };
 
 const getUser = async (token) => {
-    const response = await axios.get("/api/user", {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+        const response = await axios.get("/api/user", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
 
-    return response.data.data;
+        return response.data.data;
+    } catch (error) {
+        return false;
+    }
 };
 
 const registerUser = async (formData) => {
@@ -42,4 +46,22 @@ const logoutUser = async () => {
     }
 };
 
-export default { getUsers, getUser, registerUser, loginUser, logoutUser };
+const paymentUser = async (token) => {
+    try {
+        const response = await axios.post("/api/payment", null, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+export default {
+    getUsers,
+    getUser,
+    registerUser,
+    loginUser,
+    logoutUser,
+    paymentUser,
+};

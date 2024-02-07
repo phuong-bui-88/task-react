@@ -48,11 +48,31 @@ class ChecklistGroupControllerTest extends TestCase
             ],
         ]);
 
-                
+        // access with toke user and add user to favorite task
         $response = $this->actingAs($this->user)
-                        ->get('/api/checklist-groups');
+            ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => true]);
+        $response = $this->actingAs($this->user)
+            ->get('/api/checklist-groups?is_user=true');
         $response->assertStatus(200);
-
+        $response->assertJsonCount(1, 'data');
+        $response->assertJson([
+            'data' => [
+                [
+                    'id' => $checklistGroup->id,
+                    'name' => $checklistGroup->name,
+                    'checklists' => [
+                        [
+                            'id' => $checklist->id,
+                            'name' => $checklist->name,
+                            'tasks' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'analytic' => [
+                'count_user_favorite' => 1,
+            ],
+        ]);
     }
 
     /**

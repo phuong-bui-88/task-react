@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'payment' => [
+        'base_uri' => env('PAYMENT_BASE', 'https://api-merchant.payos.vn'),
+        'client_id' => env('PAYMENT_CLIENT_ID'),
+        'api_key' => env('PAYMENT_API_KEY'),
+        'checksum_key' => env('PAYMENT_CHECKSUM_KEY'),
+        'cancelUrl' => env('PAYMENT_CANCEL_URL'),
+        'returnUrl' => env('PAYMENT_RETURN_URL'),
+    ]
+
 ];

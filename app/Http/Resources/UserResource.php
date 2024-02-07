@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'is_admin' => $this->is_admin,
             'created_at' => $this->created_at->format('d-m-Y'),
+            'subscribe' => $this->subscribe,
         ];
     }
 }

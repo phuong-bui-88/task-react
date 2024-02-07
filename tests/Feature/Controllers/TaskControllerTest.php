@@ -226,6 +226,23 @@ class TaskControllerTest extends TestCase
         ]);       
     }
 
+    public function testRemindAtTask() {
+        $checklistGroup = $this->createChecklistGroup();
+        $checklist = $this->createChecklist($checklistGroup);
+        $task = $this->createTask($checklist);    
+
+        $response = $this->actingAs($this->user)
+            ->put(route('tasks.remindAt', ['task' => $task->id]), ['remindAt' => '2021-12-31 00:20:00']);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('tasks', [
+            'task_id' => $task->id,
+            'user_id' => $this->user->id,
+            'remind_at' => (new Carbon('2021-12-31 00:20:00'))->timestamp,
+        ]);       
+    }
+
+
     public function testGetFavoriteTask() {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);

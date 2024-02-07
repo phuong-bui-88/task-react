@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 // Auth::routes(['login' => false, 'confirm' => false, 'verify' => false]);
 
-Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('logout');
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 

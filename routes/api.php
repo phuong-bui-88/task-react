@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get('success', [\App\Http\Controllers\PaymentController::class, 'success']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('user', [App\Http\Controllers\UserController::class, 'show']);
@@ -22,6 +24,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // get favorite tasks
     Route::get('favorite-tasks', [\App\Http\Controllers\TaskController::class, 'favoriteTasks'])->name('tasks.favoriteTasks');
 
+    // payment
+    Route::post('payment', [App\Http\Controllers\PaymentController::class, 'payment'])->name('payment');
     // Welcome and Consulation routes
     Route::get('welcome', [\App\Http\Controllers\PageController::class, 'welcome']);
     Route::get('consulation', [\App\Http\Controllers\PageController::class, 'consulation']);
@@ -57,6 +61,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('upload', [\App\Http\Controllers\UploadController::class, 'upload']);
 });
 
-Route::middleware(['is_admin'])->group(function () {
-
-});

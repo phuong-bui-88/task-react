@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('website')->default('');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('subscribe')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
