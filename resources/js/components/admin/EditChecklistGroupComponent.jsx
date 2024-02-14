@@ -58,8 +58,7 @@ function EditChecklistGroupComponent({ checklistGroups, onFetchChecklistGroups }
     useEffect(() => {
         if (!checklistGroups) return;
 
-        let checklistGroupIndex = ChecklistGroupService.findIndexesByGroupId(checklistGroups, checklistGroupId);
-        setChecklistGroup(checklistGroups[checklistGroupIndex]);
+        setChecklistGroup(checklistGroups[checklistGroupId]);
     }, [checklistGroups, checklistGroupId]);
 
     return (checklistGroup &&

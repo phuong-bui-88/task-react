@@ -1,8 +1,6 @@
-import ChecklistGroupService from "@services/ChecklistGroupService";
 import React, { useEffect, useState } from "react";
 
 const CountTaskComponent = ({ checklistGroups, checklist }) => {
-    const [groupIndex, setGroupIndex] = useState(0);
     const [sumUserTaskCount, setSumUserTaskCount] = useState(0);
     const [sumTaskCount, setSumTaskCount] = useState(0);
 
@@ -12,22 +10,14 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
         setSumTaskCount(0);
         setSumUserTaskCount(0);
 
-        const { groupIndex, checklistIndex } =
-            ChecklistGroupService.findIndexesByChecklistId(
-                checklistGroups,
-                checklist.id
-            );
-
-        setGroupIndex(groupIndex);
-
-        checklistGroups[groupIndex].checklists.map((checklist, index) => {
+        Object.entries(checklistGroups[checklist.checklistGroupId].checklists).map(([key, checklistItem]) => {
             setSumTaskCount((prevSumTaskCount) => {
-                return prevSumTaskCount + checklist.count_tasks;
+                return prevSumTaskCount + checklistItem.count_tasks;
             });
 
             setSumUserTaskCount((prevSumUserTaskCount) => {
                 return (
-                    prevSumUserTaskCount + checklist.count_user_completed_tasks
+                    prevSumUserTaskCount + checklistItem.count_user_completed_tasks
                 );
             });
         });
@@ -40,26 +30,26 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
             <div className="card-body">
                 <div className="row text-center">
                     {checklistGroups &&
-                        checklistGroups[groupIndex].checklists.map(
-                            (checklist, index) => (
+                        Object.entries(checklistGroups[checklist.checklistGroupId].checklists).map(([key, checklistItem]) => {
+                            return (
                                 <div
                                     className="col mb-sm-2 mb-0"
-                                    key={checklist.id}
+                                    key={checklistItem.id}
                                 >
                                     <div className="text-medium-emphasis">
-                                        {checklist.name}
+                                        {checklistItem.name}
                                     </div>
                                     <div className="fw-semibold">
-                                        {checklist.count_user_completed_tasks} /{" "}
-                                        {checklist.count_tasks}
+                                        {checklistItem.count_user_completed_tasks} /{" "}
+                                        {checklistItem.count_tasks}
                                     </div>
                                     <div className="progress progress-thin mt-2">
                                         <div
                                             className="progress-bar bg-success"
                                             role="progressbar"
                                             style={{
-                                                width: `${(checklist.count_user_completed_tasks /
-                                                    checklist.count_tasks) *
+                                                width: `${(checklistItem.count_user_completed_tasks /
+                                                    checklistItem.count_tasks) *
                                                     100
                                                     }%`,
                                             }}
@@ -69,7 +59,8 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
                                     </div>
                                 </div>
                             )
-                        )}
+                        })
+                    }
 
                     <div className="col mb-sm-2 mb-0">
                         <div

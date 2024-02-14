@@ -17,9 +17,8 @@ class ChecklistController extends Controller
      */
     public function store(ChecklistRequest $request, ChecklistGroup $checklistGroup)
     {
-        $checklistGroup->checklists()->create($request->validated());
-
-        return new ChecklistGroupResource($checklistGroup);
+        $checklist = $checklistGroup->checklists()->create($request->validated());
+        return new ChecklistResource($checklist);
     }
 
     /**
@@ -36,7 +35,7 @@ class ChecklistController extends Controller
     public function update(ChecklistRequest $request, ChecklistGroup $checklistGroup,  Checklist $checklist)
     {
         $checklist->update($request->validated());
-        return new ChecklistResource($checklist);
+        return response()->noContent();
     }
 
     /**
@@ -45,7 +44,6 @@ class ChecklistController extends Controller
     public function destroy(ChecklistGroup $checklistGroup, Checklist $checklist)
     {
         $checklist->delete();
-
-        return 'ok';
+        return response()->noContent();
     }
 }

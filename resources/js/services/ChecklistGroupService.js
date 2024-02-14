@@ -64,42 +64,10 @@ const destroyChecklistGroup = async (checklistGroup, token) => {
     }
 };
 
-const findIndexesByChecklistId = (checklistGroups, checklistId) => {
-    let groupIndex = -1;
-    let checklistIndex = -1;
-
-    checklistGroups.forEach((group, currentGroupIndex) => {
-        const checklistFoundIndex = group.checklists.findIndex(
-            (checklist) => checklist.id == checklistId
-        );
-
-        if (checklistFoundIndex !== -1) {
-            groupIndex = currentGroupIndex;
-            checklistIndex = checklistFoundIndex;
-        }
-    });
-
-    return { groupIndex, checklistIndex };
-};
-
-const findIndexesByGroupId = (checklistGroups, checklistGroupId) => {
-    let groupIndex = -1;
-
-    checklistGroups.forEach((group, currentGroupIndex) => {
-        if (group.id == checklistGroupId) {
-            groupIndex = currentGroupIndex;
-        }
-    });
-
-    return groupIndex;
-};
-
 export default {
     getChecklistGroups,
     getChecklistGroup,
     storeChecklistGroup,
     updateChecklistGroup,
     destroyChecklistGroup,
-    findIndexesByChecklistId,
-    findIndexesByGroupId,
 };

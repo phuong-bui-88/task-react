@@ -19,10 +19,10 @@ function LeftSidebarAdminComponent({ checklistGroups, pages }) {
         }));
     }
 
-    return (
+    return checklistGroups && (
         <div>
             <li className="nav-title">Manager checklist</li>
-            {checklistGroups && checklistGroups.map((checklistGroup) => (
+            {checklistGroups && Object.entries(checklistGroups).map(([, checklistGroup]) => (
                 <li className={`nav-group show ${isActive[checklistGroup.id] ? 'show' : ''}`} key={checklistGroup.id}>
                     <Link className="nav-link" to={`/admin/checklist-groups/${checklistGroup.id}/edit`}>
                         <FolderCopyIcon className="me-1" />
@@ -31,7 +31,7 @@ function LeftSidebarAdminComponent({ checklistGroups, pages }) {
 
                     <ul className="nav-group-items" key={checklistGroup.id + '-checklist'}>
                         {
-                            checklistGroup.checklists && checklistGroup.checklists.map((checklist) => (
+                            checklistGroup.checklists && Object.entries(checklistGroup.checklists).map(([, checklist]) => (
                                 <li className="nav-item" key={checklist.id}>
                                     <Link className="nav-link ps-4" to={`/admin/checklist-groups/${checklistGroup.id}/checklists/${checklist.id}/edit`}>
                                         <ChecklistIcon className="pe-2" />

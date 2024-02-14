@@ -16,7 +16,6 @@ import UserService from "@services/UserService";
 function ChecklistComponent({
     checklistGroups,
     user,
-    onFetchChecklistGroup,
     onCountUserCompletedTasks,
     onUserFaviroteTasks,
     tasksList,
@@ -56,11 +55,16 @@ function ChecklistComponent({
         setChecklist(response);
     };
 
-    const handleCompletedTask = (e, taskId) => {
-        let token = TokenService.getToken();
+    const handleCompletedTask = (e, task, index) => {
 
-        TaskService.completeTask(taskId, e.target.checked, token);
-        fetchChecklist(checklistId);
+        let token = TokenService.getToken();
+        TaskService.completeTask(task.id, e.target.checked, token);
+
+        task.is_completed = e.target.checked;
+        setTasks((prevState) => {
+            return prevState.map((taskItem, i) => (i == index ? task : taskItem));
+        },)
+
         let checked = e.target.checked ? 1 : -1;
 
         onCountUserCompletedTasks(checklist.checklistGroupId, checklistId, checked);
@@ -75,7 +79,7 @@ function ChecklistComponent({
         task.is_favorite = !task.is_favorite;
         setTasks((prevState) => {
             return prevState.map((taskItem, i) => (i == index ? task : taskItem));
-        })
+        },)
 
         onUserFaviroteTasks('count_user_favorite', (task.is_favorite == true ? 1 : -1));
 
@@ -87,7 +91,7 @@ function ChecklistComponent({
     const handleUpdateExpandTask = (expandTask) => {
         setTasks((prevState) => {
             return prevState.map((taskItem, i) => (i == expandTask.index ? expandTask.task : taskItem));
-        })
+        },)
     }
 
     // remove tasks and null expandedTask
@@ -100,7 +104,6 @@ function ChecklistComponent({
     useEffect(() => {
         if (checklistId) {
             fetchChecklist(checklistId);
-            onFetchChecklistGroup(true);
         }
         setExpandedTasks({});
         setExpandedTask({ task: null, status: null, index: null });
@@ -177,12 +180,9 @@ function ChecklistComponent({
                                                             name="isCompleted"
                                                             value=""
                                                             onChange={(e) => {
-                                                                handleCompletedTask(
-                                                                    e,
-                                                                    tasks[index].id
-                                                                );
+                                                                handleCompletedTask(e, tasks[index], index);
                                                             }}
-                                                            checked={tasks[index].is_completed}
+                                                            checked={task.is_completed}
                                                         />
                                                     </td>
                                                     <td className="w-75">

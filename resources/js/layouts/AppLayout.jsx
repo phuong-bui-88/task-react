@@ -56,33 +56,15 @@ function AppLayout() {
     };
 
     const handleCountUserCompletedTasks = (checklistGroupId, checklistId, checked) => {
-        let { groupIndex, checklistIndex } =
-            ChecklistGroupService.findIndexesByChecklistId(
-                checklistGroups,
-                checklistId
-            );
-
-        let newValue =
-            checklistGroups[groupIndex].checklists[checklistIndex]
-                .count_user_completed_tasks + checked;
+        let newChecklist = checklistGroups[checklistGroupId].checklists[checklistId];
+        newChecklist.count_user_completed_tasks = newChecklist.count_user_completed_tasks + checked;
 
         setChecklistGroups((prevChecklistGroups) => {
-            const updatedGroups = [...prevChecklistGroups];
-            updatedGroups[groupIndex] = {
-                ...updatedGroups[groupIndex],
-                checklists: [
-                    ...updatedGroups[groupIndex].checklists.map(
-                        (checklist, index) =>
-                            index === checklistIndex
-                                ? {
-                                    ...checklist,
-                                    count_user_completed_tasks: newValue,
-                                }
-                                : checklist
-                    ),
-                ],
-            };
-            return updatedGroups;
+            // Clone prevChecklistGroups to avoid mutating the state directly
+            let newChecklistGroups = { ...prevChecklistGroups };
+
+            newChecklistGroups[checklistGroupId].checklists[checklistId] = newChecklist;
+            return newChecklistGroups;
         });
     };
 
@@ -174,7 +156,7 @@ function AppLayout() {
                     />
                     <Route
                         path="/important"
-                        element={<FavoriteTaskComponent onCountUserCompletedTasks={handleCountUserCompletedTasks} onUserFaviroteTasks={handleUserFaviroteTasks} />}
+                        element={<FavoriteTaskComponent onCountUserCompletedTasks={handleCountUserCompletedTasks} onUserFaviroteTasks={handleUserFaviroteTasks} user={user} />}
                     />
                     <Route
                         path="/admin/users"
@@ -190,7 +172,6 @@ function AppLayout() {
                             <ChecklistComponent
                                 checklistGroups={checklistGroups}
                                 user={user}
-                                onFetchChecklistGroup={fetchChecklistGroups}
                                 onCountUserCompletedTasks={
                                     handleCountUserCompletedTasks
                                 }

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 // https://mui.com/material-ui/material-icons/?query=Dash
@@ -21,7 +21,7 @@ function LeftSidebarUserComponent({ checklistGroups, analyticChecklistGroups }) 
         <div>
             <LeftSidebarRemindUserComponent analyticChecklistGroups={analyticChecklistGroups} />
 
-            {checklistGroups && checklistGroups.map((checklistGroup) => (
+            {checklistGroups && Object.entries(checklistGroups).map(([, checklistGroup]) => (
                 <li key={checklistGroup.id}>
                     <div className={`nav-title show ${isActive[checklistGroup.id] ? 'show' : ''}`} >
                         {checklistGroup.name}
@@ -37,7 +37,7 @@ function LeftSidebarUserComponent({ checklistGroups, analyticChecklistGroups }) 
 
                     <ul className="nav-group-items" key={checklistGroup.id + '-checklist'}>
                         {
-                            checklistGroup.checklists && checklistGroup.checklists.map((checklist) => (
+                            checklistGroup.checklists && Object.entries(checklistGroup.checklists).map(([, checklist]) => (
                                 <li className="nav-item" key={checklist.id}>
                                     <Link className="nav-link ps-4" to={`/checklists/${checklist.id}`}>
                                         <ChecklistIcon className="pe-2" />

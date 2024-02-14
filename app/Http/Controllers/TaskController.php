@@ -17,9 +17,8 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request, Checklist $checklist)
     {
-        $checklist->tasks()->create($request->validated());
-
-        return new ChecklistResource($checklist);
+        $task = $checklist->tasks()->create($request->validated());
+        return new TaskResource($task);
     }
 
     /**
@@ -28,7 +27,6 @@ class TaskController extends Controller
     public function show(Checklist $checklist, Task $task)
     {
         $task = $checklist->tasks()->where('id', $task->id)->first();
-
         return new TaskResource($task);
     }
 
@@ -38,8 +36,7 @@ class TaskController extends Controller
     public function update(TaskRequest $request, Checklist $checklist, Task $task)
     {
         $task->update($request->validated());
-
-        return new TaskResource($task);
+        return response()->noContent();
     }
 
     /**
@@ -48,8 +45,7 @@ class TaskController extends Controller
     public function destroy(Checklist $checklist, Task $task)
     {
         $task->delete();
-
-        return 'ok';
+        return response()->noContent();
     }
 
     public function updatePosition(Request $request, Checklist $checklist)
@@ -68,8 +64,7 @@ class TaskController extends Controller
         $completedAt = $request->get('isCompleted') == true ? now() : null;
         $user = $request->user();
         $this->updateAttribute('completed_at', $completedAt, $task, $user);
-        
-        return new TaskResource($task);
+        return response()->noContent();
     }
 
     public function favorite(Request $request, Task $task)
@@ -78,7 +73,7 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('is_favorite', $isFavorite, $task, $user);
         
-        return new TaskResource($task);
+        return response()->noContent();
     }
 
     public function dueDate(Request $request, Task $task)
@@ -89,7 +84,7 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('due_date', $time, $task, $user);
         
-        return new TaskResource($task);   
+        return response()->noContent();   
     }
 
     public function remindAt(Request $request, Task $task)
@@ -100,7 +95,7 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('remind_at', $time, $task, $user);
         
-        return new TaskResource($task);   
+        return response()->noContent();   
     }
 
     public function changeDateTimeToTimestamp($dateTime)
@@ -150,6 +145,6 @@ class TaskController extends Controller
         $user = $request->user();
         $userTask = $this->updateAttribute('note', $note, $task, $user);
         
-        return new TaskResource($task);
+        return response()->noContent();
     }
 }

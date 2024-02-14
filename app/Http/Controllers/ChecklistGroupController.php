@@ -15,6 +15,9 @@ class ChecklistGroupController extends Controller
      */
     public function index(Request $request)
     {
+        // add request is_checklist_group to $request
+        $request->merge(['is_checklist_group' => true]);
+        
         $checklistGroups = ChecklistGroup::with(['checklists' => function ($query) use ($request) {
             $query->whereNull('user_id');
         }, 'checklists.tasks' => function ($query) use ($request) {
@@ -22,7 +25,7 @@ class ChecklistGroupController extends Controller
         }]);
 
         // count favorite task
-        $cgr = ChecklistGroupResource::collection($checklistGroups->get());
+        $cgr = ChecklistGroupResource::collection($checklistGroups->get()->keyBy->id);
         $isUser = $request->has('is_user') && $request->is_user;
 
         if ($isUser) {
@@ -63,7 +66,7 @@ class ChecklistGroupController extends Controller
     {
         $checklistGroup->update($request->validated());
 
-        return new ChecklistGroupResource($checklistGroup);
+        return response()->noContent();
     }
 
     /**
@@ -73,6 +76,6 @@ class ChecklistGroupController extends Controller
     {
         $checklistGroup->delete();
 
-        return ['ok'];
+        return response()->noContent();
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChecklistGroupResource extends JsonResource
 {
+    public $preserveKeys = true;
+
     /**
      * Transform the resource into an array.
      *
@@ -27,12 +29,12 @@ class ChecklistGroupResource extends JsonResource
         $isNew = is_null($groupUpdatedAt);
         $isUpdate = !$isNew && $this->updated_at->gt($groupUpdatedAt);
 
-        $checklists = $this->checklists->map(function ($checklist) use ($isUser, $isNew, $isUpdate) {
+        $checklists = $this->checklists->mapWithKeys(function ($checklist) use ($isUser, $isNew, $isUpdate) {
             $item = new ChecklistResource($checklist);
             if ($isUser) {
                 $item->additional(['is_new' => $isNew, 'is_update' => $isUpdate]);
             }
-            return $item;
+            return [$checklist->id => $item];
         });
 
         // count favorite task

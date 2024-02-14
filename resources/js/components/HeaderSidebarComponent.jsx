@@ -15,6 +15,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
     const handleClick = () => {
         setIsActive(!isActive);
     };
+
     const logoutClick = async () => {
         try {
             const responseData = await UserService.logoutUser();
@@ -22,7 +23,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
             setIsActive(null);
             onLogout();
             navigate("/");
-        } catch (error) {}
+        } catch (error) { }
     };
 
     return (
@@ -110,9 +111,8 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
                             </a>
 
                             <ul
-                                className={`dropdown-menu pt-0 ${
-                                    isActive ? "show" : ""
-                                }`}
+                                className={`dropdown-menu pt-0 ${isActive ? "show" : ""
+                                    }`}
                                 role="menu"
                                 aria-hidden="true"
                             >

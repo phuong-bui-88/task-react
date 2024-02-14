@@ -3,14 +3,14 @@ import ChecklistComponent from "./ChecklistComponent";
 import TaskService from "@services/TaskService";
 import TokenService from "@services/TokenService";
 
-const FavoriteTaskComponent = ({ onCountUserCompletedTasks, onUserFaviroteTasks }) => {
+const FavoriteTaskComponent = ({ onCountUserCompletedTasks, onUserFaviroteTasks, user }) => {
     const [tasks, setTasks] = useState(null);
 
     useEffect(() => {
         if (tasks) {
             return;
         }
-        ``
+
         let token = TokenService.getToken();
         TaskService.getFavoriteTasks(token).then((response) => {
             setTasks(response);
@@ -18,7 +18,7 @@ const FavoriteTaskComponent = ({ onCountUserCompletedTasks, onUserFaviroteTasks 
     });
 
     return tasks && (
-        <ChecklistComponent tasksList={tasks} onCountUserCompletedTasks={onCountUserCompletedTasks} onUserFaviroteTasks={onUserFaviroteTasks} />
+        <ChecklistComponent tasksList={tasks} onCountUserCompletedTasks={onCountUserCompletedTasks} onUserFaviroteTasks={onUserFaviroteTasks} user={user} />
     );
 };
 

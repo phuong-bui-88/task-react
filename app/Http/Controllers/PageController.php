@@ -32,7 +32,7 @@ class PageController extends Controller
     {
         $page->update($request->validated());
 
-        return new PageResource($page);
+        return response()->noContent();
     }
 
     public function welcome()
