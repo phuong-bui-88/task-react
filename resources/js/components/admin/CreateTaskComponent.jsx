@@ -1,5 +1,4 @@
 import TaskService from '@services/TaskService.js';
-import TokenService from '@services/TokenService';
 import React, { useState } from 'react';
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import HelperService from '@services/HelperService.js';
@@ -11,7 +10,6 @@ const CreateTaskComponent = ({ checklistGroupId, checklistId, onFetchChecklist }
         description: "",
     });
 
-    const token = TokenService.getToken();
     const [errors, setErrors] = useState(null);
 
     const handleInputChange = (e) => {
@@ -32,7 +30,6 @@ const CreateTaskComponent = ({ checklistGroupId, checklistId, onFetchChecklist }
             await TaskService.storeTask(
                 checklistId,
                 taskData,
-                token
             );
 
             onFetchChecklist(checklistGroupId, checklistId);
@@ -50,46 +47,48 @@ const CreateTaskComponent = ({ checklistGroupId, checklistId, onFetchChecklist }
     };
 
     return (
-        <div className="card mb-4">
-            <form method="POST" onSubmit={handleTaskSubmit}>
-                <div className="card-header">
-                    <strong>New Task</strong>
-                </div>
-
-                <div className="card-body">
-                    <div className="mb-3">
-                        <label className="form-label">Name</label>
-                        <input
-                            type="text"
-                            className={HelperService.addInvalid(null, errors?.name)}
-                            name="name"
-                            placeholder="Task name"
-                            value={taskData.name}
-                            onChange={handleInputChange}
-                        />
-                        <ErrorComponent error={errors?.name} />
+        <>
+            <div className="card mb-4">
+                <form method="POST" onSubmit={handleTaskSubmit}>
+                    <div className="card-header">
+                        <strong>New Task</strong>
                     </div>
 
-                    <div className="mb-3">
-                        <div className="form-label">
-                            Description
+                    <div className="card-body">
+                        <div className="mb-3">
+                            <label className="form-label">Name</label>
+                            <input
+                                type="text"
+                                className={HelperService.addInvalid(null, errors?.name)}
+                                name="name"
+                                placeholder="Task name"
+                                value={taskData.name}
+                                onChange={handleInputChange}
+                            />
+                            <ErrorComponent error={errors?.name} />
                         </div>
-                        <CKEditorComponent
-                            data={taskData.description}
-                            onChange={handleEditorInputChange}
-                        />
-                    </div>
-                </div>
 
-                <div className="card-footer">
-                    <div className="col-12">
-                        <button className="btn btn-primary" type="submit">
-                            Save Task
-                        </button>
+                        <div className="mb-3">
+                            <div className="form-label">
+                                Description
+                            </div>
+                            <CKEditorComponent
+                                data={taskData.description}
+                                onChange={handleEditorInputChange}
+                            />
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+
+                    <div className="card-footer">
+                        <div className="col-12">
+                            <button className="btn btn-primary" type="submit">
+                                Save Task
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </>
     );
 };
 

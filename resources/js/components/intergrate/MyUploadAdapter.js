@@ -1,37 +1,31 @@
+import BaseService from "@services/BaseService.js";
 
-import UploadService from '../../services/UploadService.js'; // Import the uploadService
-import TokenService from '../../services/TokenService.js'; // Import the tokenService
-import axios from 'axios';
+const baseService = new BaseService();
 
 class MyUploadAdapter {
-    constructor( loader ) {
+    constructor(loader) {
         this.loader = loader;
     }
 
     upload() {
         return this.loader.file.then((file) => {
-          return new Promise((resolve, reject) => {
-            const formData = new FormData();
-            formData.append('image', file);
-            const token = TokenService.getToken();
-    
-            const config = {
-                headers: { "Content-Type": "multipart/form-data", 'Authorization': `Bearer ${token}`} 
-            };
-    
-            axios
-              .post('/api/upload', formData, config)
-              .then((response) => {
-                resolve({
-                  default: response.data.url,
-                });
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          });
+            return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append("image", file);
+
+                baseService
+                    .uploadFileFormData("/api/upload", formData)
+                    .then((response) => {
+                        resolve({
+                            default: response.url,
+                        });
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
         });
-      }
+    }
 }
 
 export default MyUploadAdapter;

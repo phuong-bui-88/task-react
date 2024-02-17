@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import ChecklistGroupService from "../../services/ChecklistGroupService.js";
 
 import CheckListService from "@services/CheckListService.js";
 import HelperService from "@services/HelperService.js";
 import { useNavigate, useParams } from "react-router-dom";
-import TokenService from "@services/TokenService.js";
 import ErrorComponent from "@components/intergrate/ErrorComponent.jsx";
-
 
 function CreateChecklistComponent({ checklistGroups, onFetchChecklistGroups }) {
 
@@ -23,13 +20,11 @@ function CreateChecklistComponent({ checklistGroups, onFetchChecklistGroups }) {
         const form = e.target;
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
-        const token = TokenService.getToken();
 
         try {
             await CheckListService.storeChecklist(
                 checklistGroup.id,
                 formJson,
-                token
             );
 
             onFetchChecklistGroups();

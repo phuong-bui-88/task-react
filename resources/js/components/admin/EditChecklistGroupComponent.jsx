@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import ErrorComponent from "@components/intergrate/ErrorComponent";
 import ChecklistGroupService from "@services/ChecklistGroupService";
 import HelperService from "@services/HelperService";
-import TokenService from "@services/TokenService.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 
@@ -13,7 +12,6 @@ function EditChecklistGroupComponent({ checklistGroups, onFetchChecklistGroups }
     const [checklistGroup, setChecklistGroup] = useState(null);
     const [errors, setErrors] = useState(null);
     const { checklistGroupId } = useParams();
-    const token = TokenService.getToken();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +19,6 @@ function EditChecklistGroupComponent({ checklistGroups, onFetchChecklistGroups }
         try {
             await ChecklistGroupService.updateChecklistGroup(
                 checklistGroup,
-                token
             );
 
             onFetchChecklistGroups();
@@ -42,8 +39,7 @@ function EditChecklistGroupComponent({ checklistGroups, onFetchChecklistGroups }
 
         try {
             await ChecklistGroupService.destroyChecklistGroup(
-                checklistGroup,
-                token
+                checklistGroup
             );
 
             onFetchChecklistGroups();

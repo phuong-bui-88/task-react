@@ -1,4 +1,6 @@
-import axios from "axios";
+import BaseService from "./BaseService";
+
+const baseService = new BaseService();
 
 /**
  * Retrieves checklist groups from the API.
@@ -8,60 +10,31 @@ import axios from "axios";
  * @returns {Promise<Array>} - A promise that resolves to an array of checklist groups.
  * @throws {Error} - If an error occurs while retrieving the checklist groups.
  */
-const getChecklistGroups = async (isUser = false, token) => {
-    try {
-        let url = "/api/checklist-groups";
-        if (isUser) {
-            url += "?is_user=true";
-        }
-
-        const response = await axios.get(url, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
+const getChecklistGroups = async (isUser = false) => {
+    let url = "/api/checklist-groups";
+    if (isUser) {
+        url += "?is_user=true";
     }
+
+    return baseService.get(url, true);
 };
 
-const getChecklistGroup = async (id, token) => {
-    try {
-        const response = await axios.get("/api/checklist-groups/" + id, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+const getChecklistGroup = async (id) => {
+    return baseService.get("/checklist-groups/" + id);
 };
 
-const storeChecklistGroup = async (formData, token) => {
-    const response = await axios.post("/api/checklist-groups", formData, {
-        headers: { Authorization: `Bearer ${token}` },
+const storeChecklistGroup = async (formData) => {
+    return baseService.post("/api/checklist-groups", formData);
+};
+
+const updateChecklistGroup = async (checklistGroup) => {
+    return baseService.put("/api/checklist-groups/" + checklistGroup.id, {
+        name: checklistGroup.name,
     });
-    return response.data;
 };
 
-const updateChecklistGroup = async (checklistGroup, token) => {
-    const response = await axios.put(
-        "/api/checklist-groups/" + checklistGroup.id,
-        { name: checklistGroup.name },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
-};
-
-const destroyChecklistGroup = async (checklistGroup, token) => {
-    try {
-        const response = await axios.delete(
-            "/api/checklist-groups/" + checklistGroup.id,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+const destroyChecklistGroup = async (checklistGroup) => {
+    return baseService.delete("/api/checklist-groups/" + checklistGroup.id);
 };
 
 export default {

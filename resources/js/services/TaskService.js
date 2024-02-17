@@ -1,103 +1,69 @@
-import axios from "axios";
+import BaseService from "./BaseService";
 
-const getTasks = async (checklistId, token) => {
-    const response = await axios.get(
+const baseService = new BaseService();
+
+const getTasks = async (checklistId) => {
+    return baseService.get("/api/checklists/" + checklistId + "/tasks");
+};
+
+const getTask = async (checklistId, taskId) => {
+    return baseService.get(
+        "/api/checklists/" + checklistId + "/tasks/" + taskId
+    );
+};
+
+const storeTask = async (checklistId, formData) => {
+    return baseService.post(
         "/api/checklists/" + checklistId + "/tasks",
-        { headers: { Authorization: `Bearer ${token}` } }
+        formData
     );
-    return response.data.data;
 };
 
-const getTask = async (checklistId, taskId, token) => {
-    // try {
-    const response = await axios.get(
-        "/api/checklists/" + checklistId + "/tasks/" + taskId,
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data.data;
-    // } catch (error) {
-    //     throw error.response.data;
-    // }
-};
-
-const storeTask = async (checklistId, formData, token) => {
-    const response = await axios.post(
-        "/api/checklists/" + checklistId + "/tasks",
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
-};
-
-const updateTask = async (task, token) => {
-    const response = await axios.put(
+const updateTask = async (task) => {
+    return baseService.put(
         "/api/checklists/" + task.checklistId + "/tasks/" + task.id,
-        { name: task.name, description: task.description },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { name: task.name, description: task.description }
     );
-    return response.data;
 };
 
-const completeTask = async (taskId, isCompleted, token) => {
-    const response = await axios.put(
-        "/api/tasks/" + taskId + "/complete",
-        { isCompleted: isCompleted },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
+const completeTask = async (taskId, isCompleted) => {
+    return baseService.put("/api/tasks/" + taskId + "/complete", {
+        isCompleted: isCompleted,
+    });
 };
 
-const favoriteTask = async (taskId, isFavorite, token) => {
-    const response = await axios.put(
-        "/api/tasks/" + taskId + "/favorite",
-        { isFavorite: isFavorite },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
+const favoriteTask = async (taskId, isFavorite) => {
+    return baseService.put("/api/tasks/" + taskId + "/favorite", {
+        isFavorite: isFavorite,
+    });
 };
 
-const noteTask = async (taskId, note, token) => {
-    const response = await axios.put(
-        "/api/tasks/" + taskId + "/note",
-        { note: note },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
+const noteTask = async (taskId, note) => {
+    return baseService.put("/api/tasks/" + taskId + "/note", { note: note });
 };
 
 // get favorite tasks
-const getFavoriteTasks = async (token) => {
-    const response = await axios.get("/api/favorite-tasks", {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data.data;
+const getFavoriteTasks = async () => {
+    return baseService.get("/api/favorite-tasks");
 };
 
-const remindAtTask = async (taskId, remindAt, token) => {
-    const response = await axios.put(
-        "/api/tasks/" + taskId + "/remind-at",
-        { remindAt: remindAt },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
+const remindAtTask = async (taskId, remindAt) => {
+    return baseService.put("/api/tasks/" + taskId + "/remind-at", {
+        remindAt: remindAt,
+    });
 };
 
 // post to due date task
-const dueDateTask = async (taskId, dueDate, token) => {
-    const response = await axios.put(
-        "/api/tasks/" + taskId + "/due-date",
-        { dueDate: dueDate },
-        { headers: { Authorization: `Bearer ${token}` } }
-    );
-    return response.data;
+const dueDateTask = async (taskId, dueDate) => {
+    return baseService.put("/api/tasks/" + taskId + "/due-date", {
+        dueDate: dueDate,
+    });
 };
 
-const destroyTask = async (task, token) => {
-    const response = await axios.delete(
-        "/api/checklists/" + task.checklistId + "/tasks/" + task.id,
-        { headers: { Authorization: `Bearer ${token}` } }
+const destroyTask = async (task) => {
+    return baseService.delete(
+        "/api/checklists/" + task.checklistId + "/tasks/" + task.id
     );
-    return response.data;
 };
 
 export default {

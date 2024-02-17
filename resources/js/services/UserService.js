@@ -1,60 +1,32 @@
-import axios from "axios";
+import BaseService from "./BaseService";
 
-const getUsers = async (currentPage, token) => {
-    return await axios.get(`/api/users?page=${currentPage}`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
+const baseService = new BaseService();
+
+const getUsers = async (currentPage) => {
+    return baseService.get(`/api/users?page=${currentPage}`, true);
 };
 
-const getUser = async (token) => {
-    try {
-        const response = await axios.get("/api/user", {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-
-        return response.data.data;
-    } catch (error) {
-        return false;
-    }
+const getUser = async () => {
+    return baseService.get("/api/user");
 };
 
 const registerUser = async (formData) => {
-    try {
-        const response = await axios.post("/register", formData);
-        return response.data.token;
-    } catch (error) {
-        throw error.response.data;
-    }
+    let result = await baseService.post("/register", formData);
+    return result.token;
 };
 
 // ghetrung1@gmail.com|12345678
 const loginUser = async (formData) => {
-    try {
-        const response = await axios.post("/login", formData);
-        return response.data.token;
-    } catch (error) {
-        throw error.response.data;
-    }
+    let result = await baseService.post("/login", formData);
+    return result.token;
 };
 
 const logoutUser = async () => {
-    try {
-        const response = await axios.post("/logout");
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+    return baseService.post("/logout");
 };
 
-const paymentUser = async (token) => {
-    try {
-        const response = await axios.post("/api/payment", null, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+const paymentUser = async () => {
+    return baseService.post("/api/payment", null);
 };
 
 export default {

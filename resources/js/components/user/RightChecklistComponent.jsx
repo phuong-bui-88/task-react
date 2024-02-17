@@ -6,7 +6,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import TaskService from '@services/TaskService';
-import TokenService from '@services/TokenService';
 import { format } from 'date-fns';
 import 'flatpickr/dist/themes/material_blue.css';
 import React, { useEffect, useState } from 'react';
@@ -85,17 +84,15 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
 
         expandedTask.task.due_date = dateValue;
         onUpdateExpandTask(expandedTask);
-        let token = TokenService.getToken();
-        TaskService.dueDateTask(expandedTask.task.id, dateValue, token);
+        TaskService.dueDateTask(expandedTask.task.id, dateValue);
         expandedToggle(null, expandedType.DUE_DATE);
     }
 
     const removeDueDate = () => {
         setDueDate(null);
-        let token = TokenService.getToken();
         expandedTask.task.due_date = null;
         onUpdateExpandTask(expandedTask);
-        TaskService.dueDateTask(expandedTask.task.id, null, token);
+        TaskService.dueDateTask(expandedTask.task.id, null);
     }
 
     const addRemindAt = (type, value, event = null) => {
@@ -126,8 +123,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
 
         expandedTask.task.remind_at = dateValue;
         onUpdateExpandTask(expandedTask);
-        let token = TokenService.getToken();
-        TaskService.remindAtTask(expandedTask.task.id, dateValue, token);
+        TaskService.remindAtTask(expandedTask.task.id, dateValue);
         expandedToggle(null, expandedType.REMIND_AT);
     }
 
@@ -136,8 +132,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
         setRemindAt(null);
         expandedTask.task.remaind_at = null;
         onUpdateExpandTask(expandedTask);
-        let token = TokenService.getToken();
-        TaskService.remindAtTask(expandedTask.task.id, null, token);
+        TaskService.remindAtTask(expandedTask.task.id, null);
     }
 
     const expandedToggle = (e = null, type) => {
@@ -149,8 +144,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
         let note = document.getElementById('note-task').value;
         expandedTask.task.note = note;
         onUpdateExpandTask(expandedTask);
-        let token = TokenService.getToken();
-        TaskService.noteTask(expandedTask.task.id, note, token);
+        TaskService.noteTask(expandedTask.task.id, note);
         expandedToggle(null, expandedType.NOTE);
     }
 

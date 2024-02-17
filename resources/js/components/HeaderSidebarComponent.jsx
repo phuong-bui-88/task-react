@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 
 import { Link, useNavigate } from "react-router-dom";
+import LocalStorageService from "@services/LocalStorageService.js";
 
 function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
     const [isActive, setIsActive] = useState(false);
@@ -19,7 +20,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
     const logoutClick = async () => {
         try {
             const responseData = await UserService.logoutUser();
-            localStorage.removeItem("token");
+            LocalStorageService.removeToken();
             setIsActive(null);
             onLogout();
             navigate("/");

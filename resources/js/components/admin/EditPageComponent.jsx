@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import PageService from "@services/PageService.js";
-import TokenService from "@services/TokenService.js";
 import { useNavigate, useParams } from "react-router-dom";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
 import HelperService from "@services/HelperService.js";
@@ -12,14 +11,13 @@ function EditPageComponent({ onFetchPages }) {
     const [page, setPage] = useState(null);
     const { pageId } = useParams();
     const navigate = useNavigate();
-    const token = TokenService.getToken();
     const [errors, setErrors] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            await PageService.updatePage(page, token);
+            await PageService.updatePage(page);
             onFetchPages();
             navigate("/dashboard");
         } catch (error) {
@@ -40,7 +38,7 @@ function EditPageComponent({ onFetchPages }) {
 
     useEffect(() => {
         const fetchPage = async (pageId) => {
-            const response = await PageService.getPage(pageId, token);
+            const response = await PageService.getPage(pageId);
             setPage(response);
         }
 

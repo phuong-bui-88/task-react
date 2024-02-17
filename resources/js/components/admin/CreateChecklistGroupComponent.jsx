@@ -3,14 +3,12 @@ import React, { useState } from "react";
 
 import ErrorComponent from "@components/intergrate/ErrorComponent";
 import HelperService from "@services/HelperService";
-import TokenService from "@services/TokenService.js";
 import { useNavigate } from "react-router-dom";
 import ChecklistGroupService from "@services/ChecklistGroupService";
 
 
 function CreateChecklistGroupComponent({ onFetchChecklistGroups }) {
     const navigate = useNavigate();
-    const token = TokenService.getToken();
     const [errors, setErrors] = useState(null);
 
     const handleSubmit = async (e) => {
@@ -24,7 +22,6 @@ function CreateChecklistGroupComponent({ onFetchChecklistGroups }) {
         try {
             await ChecklistGroupService.storeChecklistGroup(
                 formJson,
-                token
             );
 
             onFetchChecklistGroups();

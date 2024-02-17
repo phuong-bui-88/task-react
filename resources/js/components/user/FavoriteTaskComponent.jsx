@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ChecklistComponent from "./ChecklistComponent";
 import TaskService from "@services/TaskService";
-import TokenService from "@services/TokenService";
 
 const FavoriteTaskComponent = ({ onCountUserCompletedTasks, onUserFaviroteTasks, user }) => {
     const [tasks, setTasks] = useState(null);
@@ -11,8 +10,7 @@ const FavoriteTaskComponent = ({ onCountUserCompletedTasks, onUserFaviroteTasks,
             return;
         }
 
-        let token = TokenService.getToken();
-        TaskService.getFavoriteTasks(token).then((response) => {
+        TaskService.getFavoriteTasks().then((response) => {
             setTasks(response);
         });
     });

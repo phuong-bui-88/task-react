@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import HelperService from "@services/HelperService.js";
-import TokenService from "@services/TokenService.js";
 import { useNavigate, useParams } from "react-router-dom";
 import TaskService from "../../services/TaskService.js";
 import CKEditorComponent from "../intergrate/CKEditorComponent.jsx";
@@ -12,14 +11,13 @@ function EditTaskComponent() {
     const navigate = useNavigate();
     const [task, setTask] = useState(null);
     const { checklistId, taskId } = useParams();
-    const token = TokenService.getToken();
     const [errors, setErrors] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            await TaskService.updateTask(task, token);
+            await TaskService.updateTask(task);
             navigate(-1);
         }
         catch (error) {
@@ -40,7 +38,7 @@ function EditTaskComponent() {
 
     useEffect(() => {
         const fetchTask = async (checklistId, taskId) => {
-            const response = await TaskService.getTask(checklistId, taskId, token);
+            const response = await TaskService.getTask(checklistId, taskId);
             setTask(response);
         };
 

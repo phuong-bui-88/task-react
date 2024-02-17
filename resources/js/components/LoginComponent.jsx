@@ -7,6 +7,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import MailIcon from '@mui/icons-material/Mail';
 import ErrorComponent from "./intergrate/ErrorComponent.jsx";
 import HelperService from "@services/HelperService.js";
+import LocalStorageService from "@services/LocalStorageService.js";
 
 function LoginComponent() {
     const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ function LoginComponent() {
 
         try {
             const token = await UserService.loginUser(formJson);
-            localStorage.setItem('token', token);
+            LocalStorageService.setToken(token);
 
             navigate('/dashboard');
         } catch (error) {

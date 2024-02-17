@@ -1,38 +1,24 @@
-import axios from "axios";
+import BaseService from "./BaseService";
 
-const getPages = async (token) => {
-    try {
-        const response = await axios.get("/api/pages", {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+const baseService = new BaseService();
+
+const getPages = async () => {
+    return baseService.get("/api/pages");
 };
 
-const getPage = async (id, token) => {
+const getPage = async (id) => {
     const page = {
         1: "welcome",
         2: "consulation",
     };
-    try {
-        const response = await axios.get("/api/" + page[id], {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data.data;
-    } catch (error) {
-        throw error.response.data;
-    }
+
+    return baseService.get("/api/" + page[id]);
 };
 
-const updatePage = async (page, token) => {
+const updatePage = async (page) => {
     let data = { title: page.title, content: page.content };
 
-    const response = await axios.put("/api/pages/" + page.id, data, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return response.data;
+    return baseService.put("/api/pages/" + page.id, data);
 };
 
 export default { getPages, getPage, updatePage };

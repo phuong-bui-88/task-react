@@ -24,6 +24,8 @@ import EditPageComponent from "../components/admin/EditPageComponent.jsx";
 import UserListComponent from "../components/admin/UserListComponent.jsx";
 import ChecklistComponent from "../components/user/ChecklistComponent.jsx";
 import FavoriteTaskComponent from "@components/user/FavoriteTaskComponent.jsx";
+import LoadingComponent from "@components/intergrate/LoadingComponent.jsx";
+import LocalStorageService from "@services/LocalStorageService.js";
 
 function AppLayout() {
     const navigate = useNavigate();
@@ -34,8 +36,9 @@ function AppLayout() {
     const [analyticChecklistGroups, setAnalyticChecklistGroups] = useState(null);
     const [pages, setPages] = useState();
     const [leftSidebarActive, setLeftSidebarActive] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const token = localStorage.getItem("token");
+    const token = LocalStorageService.getToken();
 
     function handleLeftSibarActive() {
         setLeftSidebarActive(!leftSidebarActive);
@@ -43,15 +46,14 @@ function AppLayout() {
 
     const fetchChecklistGroups = async (isUser = false) => {
         const response = await ChecklistGroupService.getChecklistGroups(
-            isUser,
-            token
+            isUser
         );
         setChecklistGroups(response.data);
         setAnalyticChecklistGroups(response.analytic);
     };
 
     const fetchPages = async () => {
-        const response = await PageService.getPages(token);
+        const response = await PageService.getPages();
         setPages(response);
     };
 
@@ -80,8 +82,8 @@ function AppLayout() {
     };
 
     useEffect(() => {
-        const fetchUser = async (token) => {
-            const response = await UserService.getUser(token);
+        const fetchUser = async () => {
+            const response = await UserService.getUser();
             if (!response) {
                 localStorage.removeItem("token");
                 navigate("/login");
@@ -98,7 +100,7 @@ function AppLayout() {
         }
 
         if (token) {
-            fetchUser(token);
+            fetchUser();
         }
     }, [token]);
 
@@ -115,8 +117,19 @@ function AppLayout() {
         fetchPages();
     }, [user]);
 
+    window.addEventListener('addLoadingStorage', () => {
+        setLoading(true);
+    })
+
+    window.addEventListener('removeLoadingStorage', () => {
+        setLoading(false);
+    })
+
     return (
-        <div>
+        <div className={loading ? "position-relative" : ""}>
+
+            <LoadingComponent isLoading={loading} />
+
             {user && (
                 <div
                     className={`sidebar de sidebar-fixed ${!leftSidebarActive ? "hide" : ""
@@ -148,11 +161,11 @@ function AppLayout() {
                 <Routes>
                     <Route
                         path="/welcome"
-                        element={<PageComponent pageId={1} token={token} />}
+                        element={<PageComponent pageId={1} />}
                     />
                     <Route
                         path="/consulation"
-                        element={<PageComponent pageId={2} token={token} />}
+                        element={<PageComponent pageId={2} />}
                     />
                     <Route
                         path="/important"
@@ -160,7 +173,7 @@ function AppLayout() {
                     />
                     <Route
                         path="/admin/users"
-                        element={<UserListComponent token={token} />}
+                        element={<UserListComponent />}
                     />
                     <Route
                         path="/admin/pages/:pageId/edit"

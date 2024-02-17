@@ -1,6 +1,5 @@
 import CheckListService from '@services/CheckListService';
 import TaskService from '@services/TaskService';
-import TokenService from '@services/TokenService';
 import React, { useEffect, useState } from 'react';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -9,7 +8,6 @@ import { Link } from "react-router-dom";
 
 const TaskListComponent = ({ checklistId, tasks, onFetchChecklist }) => {
     const [tasksList, setTasksList] = useState(tasks);
-    const token = TokenService.getToken();
 
     useEffect(() => {
         setTasksList(tasks);
@@ -33,7 +31,7 @@ const TaskListComponent = ({ checklistId, tasks, onFetchChecklist }) => {
             position: index + 1,
         }));
 
-        CheckListService.updatePositionTask(checklistId, taskToUpdate, token);
+        CheckListService.updatePositionTask(checklistId, taskToUpdate);
 
         onFetchChecklist();
     };
@@ -45,7 +43,7 @@ const TaskListComponent = ({ checklistId, tasks, onFetchChecklist }) => {
             return;
         }
 
-        await TaskService.destroyTask(item, token);
+        await TaskService.destroyTask(item);
         onFetchChecklist();
     }
 

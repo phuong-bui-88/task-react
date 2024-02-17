@@ -9,6 +9,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import { useNavigate } from "react-router-dom";
 import ErrorComponent from "./intergrate/ErrorComponent.jsx";
 import HelperService from "@services/HelperService.js";
+import LocalStorageService from "@services/LocalStorageService.js";
 
 function RegisterComponent() {
     const [formData, setFormData] = useState({
@@ -33,7 +34,8 @@ function RegisterComponent() {
 
         try {
             const token = await UserService.registerUser(formJson);
-            localStorage.setItem('token', token);
+            console.log('token register', token);
+            LocalStorageService.setToken(token);
 
             navigate('/dashboard');
         } catch (error) {

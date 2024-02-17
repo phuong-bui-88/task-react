@@ -1,16 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import UserService from "../../services/UserService.js";
 
-const UserListComponent = ({token}) => {
+const UserListComponent = ({ token }) => {
     const [users, setUsers] = useState();
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchUsers = async () => {
         const response = await UserService.getUsers(currentPage, token);
-        setUsers(response.data.data);
-        setTotalPages(response.data.meta.last_page);
+        setUsers(response.data);
+        setTotalPages(response.meta.last_page);
     }
 
     useEffect(() => {
@@ -64,7 +64,7 @@ const UserListComponent = ({token}) => {
 
             <nav>
                 <ul className="pagination">
-                    {  renderPagination(totalPages) }
+                    {renderPagination(totalPages)}
                 </ul>
             </nav>
         </div>

@@ -5,7 +5,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import CheckListService from "@services/CheckListService";
 import TaskService from "@services/TaskService";
-import TokenService from "@services/TokenService";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -45,20 +44,15 @@ function ChecklistComponent({
     };
 
     const fetchChecklist = async (checklistId) => {
-        let token = TokenService.getToken();
-
         const response = await CheckListService.showChecklist(
             checklistId,
-            token
         );
 
         setChecklist(response);
     };
 
     const handleCompletedTask = (e, task, index) => {
-
-        let token = TokenService.getToken();
-        TaskService.completeTask(task.id, e.target.checked, token);
+        TaskService.completeTask(task.id, e.target.checked);
 
         task.is_completed = e.target.checked;
         setTasks((prevState) => {
@@ -73,8 +67,7 @@ function ChecklistComponent({
     const handleFavoritedTask = (e, task, index) => {
         e.target.type = 'favorite';
         e.preventDefault();
-        let token = TokenService.getToken();
-        TaskService.favoriteTask(task.id, !task.is_favorite, token);
+        TaskService.favoriteTask(task.id, !task.is_favorite);
 
         task.is_favorite = !task.is_favorite;
         setTasks((prevState) => {
@@ -123,8 +116,7 @@ function ChecklistComponent({
 
 
     const handlePayment = async () => {
-        let token = TokenService.getToken();
-        let response = await UserService.paymentUser(token);
+        let response = await UserService.paymentUser();
 
         // redirect to response url
         if (response.checkoutUrl) {
