@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Controllers;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Http\Controllers\PaymentController;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
-use App\Http\Controllers\PaymentController;
+use Tests\TestCase;
 
 class PaymentControllerTest extends TestCase
 {
@@ -23,21 +23,21 @@ class PaymentControllerTest extends TestCase
     {
         // Create a payment request
         $paymentRequest = [
-            "orderCode" => now()->timestamp,
-            "amount" => 5000,
-            "description" => "Uyen",
-            "cancelUrl" => config('services.payment.cancelUrl'),
-            "returnUrl" => config('services.payment.returnUrl'),
-            "buyerName" => "Nguyen Van A",
-            "buyerEmail" => "buyer-email@gmail.com",
-            "buyerPhone" => "090xxxxxxx",
-            "buyerAddress" => "số nhà, đường, phường, tỉnh hoặc thành phố",
-            "items" => [
+            'orderCode' => now()->timestamp,
+            'amount' => 5000,
+            'description' => 'Uyen',
+            'cancelUrl' => config('services.payment.cancelUrl'),
+            'returnUrl' => config('services.payment.returnUrl'),
+            'buyerName' => 'Nguyen Van A',
+            'buyerEmail' => 'buyer-email@gmail.com',
+            'buyerPhone' => '090xxxxxxx',
+            'buyerAddress' => 'số nhà, đường, phường, tỉnh hoặc thành phố',
+            'items' => [
                 [
-                    "name" => "Iphone",
-                    "quantity" => 1,
-                    "price" => 5000
-                ]
+                    'name' => 'Iphone',
+                    'quantity' => 1,
+                    'price' => 5000,
+                ],
             ],
             'expiredAt' => now()->addMinutes(15)->timestamp,
         ];
@@ -60,7 +60,7 @@ class PaymentControllerTest extends TestCase
 
         // Act as the user and make a POST request to the payment route
         $response = $this->actingAs($this->user)->post(route('payment'), $paymentRequest);
-        
+
         // Assert that the response status is 200
         $response->assertStatus(200);
 
@@ -93,21 +93,21 @@ class PaymentControllerTest extends TestCase
     {
         // Create a payment request
         $paymentRequest = [
-            "orderCode" => now()->timestamp,
-            "amount" => 5000,
-            "description" => "Uyen",
-            "cancelUrl" => config('services.payment.cancelUrl'),
-            "returnUrl" => config('services.payment.returnUrl'),
-            "buyerName" => "Nguyen Van A",
-            "buyerEmail" => "",
-            "buyerPhone" => "090xxxxxxx",
-            "buyerAddress" => "số nhà, đường, phường, tỉnh hoặc thành phố",
-            "items" => [
+            'orderCode' => now()->timestamp,
+            'amount' => 5000,
+            'description' => 'Uyen',
+            'cancelUrl' => config('services.payment.cancelUrl'),
+            'returnUrl' => config('services.payment.returnUrl'),
+            'buyerName' => 'Nguyen Van A',
+            'buyerEmail' => '',
+            'buyerPhone' => '090xxxxxxx',
+            'buyerAddress' => 'số nhà, đường, phường, tỉnh hoặc thành phố',
+            'items' => [
                 [
-                    "name" => "Iphone",
-                    "quantity" => 1,
-                    "price" => 5000
-                ]
+                    'name' => 'Iphone',
+                    'quantity' => 1,
+                    'price' => 5000,
+                ],
             ],
             'expiredAt' => now()->addMinutes(15)->timestamp,
         ];
@@ -119,13 +119,13 @@ class PaymentControllerTest extends TestCase
             ->andReturn(new Response(200, [], json_encode([
                 'code' => 01,
             ])));
-        
+
         // Bind the mock object to the Client class in the service container
         $this->app->instance(Client::class, $mock);
 
         // Act as the user and make a POST request to the payment route
         $response = $this->actingAs($this->user)->post(route('payment'), $paymentRequest);
-        
+
         // Assert that the response status is 200
         $response->assertStatus(400);
 
@@ -144,11 +144,11 @@ class PaymentControllerTest extends TestCase
     {
         // Create a payment request
         $data = [
-            "orderCode" => now()->timestamp,
-            "amount" => 5000,
-            "description" => "Uyen",
-            "cancelUrl" => 'http://example.com/cancel',
-            "returnUrl" => 'http://example.com/return',
+            'orderCode' => now()->timestamp,
+            'amount' => 5000,
+            'description' => 'Uyen',
+            'cancelUrl' => 'http://example.com/cancel',
+            'returnUrl' => 'http://example.com/return',
         ];
 
         ksort($data);
@@ -159,7 +159,7 @@ class PaymentControllerTest extends TestCase
                 // Don't URL encode these parameters
                 $baseString .= "$key=$value&";
             } else {
-                $baseString .= "$key=" . urlencode($value) . "&";
+                $baseString .= "$key=".urlencode($value).'&';
             }
         }
         $baseString = rtrim($baseString, '&');
@@ -169,5 +169,4 @@ class PaymentControllerTest extends TestCase
         $ctl = new PaymentController();
         $this->assertTrue($ctl->checkInvalid($data, $signature, $secretKey));
     }
-
 }

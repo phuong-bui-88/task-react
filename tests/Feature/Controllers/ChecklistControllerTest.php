@@ -2,10 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Http\Resources\ChecklistGroupResource;
-use App\Http\Resources\ChecklistResource;
 use App\Models\Checklist;
-use App\Models\ChecklistGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
@@ -32,8 +29,7 @@ class ChecklistControllerTest extends TestCase
         try {
             $response = $this->actingAs($this->adminUser)
                 ->post(route('checklists.store', $checklistGroup), []);
-        }
-        catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertEquals('The name field is required.', $e->validator->errors()->first('name'));
         }
         // case 3: access with admin user
@@ -47,7 +43,6 @@ class ChecklistControllerTest extends TestCase
         ]);
     }
 
-    
     public function testShowChecklist()
     {
         $checklistGroup = $this->createChecklistGroup();
@@ -76,7 +71,7 @@ class ChecklistControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->get(route('checklists.show', [$checklistGroup, $checklist]));
-        
+
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [
@@ -101,8 +96,7 @@ class ChecklistControllerTest extends TestCase
         try {
             $response = $this->actingAs($this->adminUser)
                 ->put(route('checklists.update', [$checklistGroup, $checklist]), []);
-        }
-        catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->assertEquals('The name field is required.', $e->validator->errors()->first('name'));
         }
         // case 3: access with admin user

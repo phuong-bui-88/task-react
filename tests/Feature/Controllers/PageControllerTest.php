@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\Page;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
+use Tests\TestCase;
 
 class PageControllerTest extends TestCase
 {
@@ -27,13 +27,13 @@ class PageControllerTest extends TestCase
         $page = Page::factory()->create();
 
         $response = $this->actingAs($this->user)
-                        ->get("/api/pages/{$page->id}");
+            ->get("/api/pages/{$page->id}");
 
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [
                 'id' => $page->id,
-            ]
+            ],
         ]);
     }
 
@@ -42,30 +42,30 @@ class PageControllerTest extends TestCase
         $page = Page::factory()->create();
         $payload = [
             'title' => 'Updated Title',
-            'content' => 'Updated Content'
+            'content' => 'Updated Content',
         ];
 
         $response = $this->actingAs($this->adminUser)
-                        ->put("api/pages/{$page->id}", $payload);
+            ->put("api/pages/{$page->id}", $payload);
         $response->assertStatus(200);
         $page->refresh();
         $this->assertEquals('Updated Title', $page->title);
         $this->assertEquals('Updated Content', $page->content);
-         
+
         // declide the user is not admin
         $response = $this->actingAs($this->user)
-                        ->put("api/pages/{$page->id}", $payload);
+            ->put("api/pages/{$page->id}", $payload);
         $response->assertStatus(403);
 
         // case title is empty
         $payload = [
             'title' => '',
-            'content' => 'Updated Content'
+            'content' => 'Updated Content',
         ];
-        
+
         try {
             $response = $this->actingAs($this->adminUser)
-                        ->put("api/pages/{$page->id}", $payload);
+                ->put("api/pages/{$page->id}", $payload);
         } catch (ValidationException $e) {
             $this->assertEquals('The title field is required.', $e->validator->errors()->first('title'));
         }
@@ -81,7 +81,7 @@ class PageControllerTest extends TestCase
         $response->assertJson([
             'data' => [
                 'id' => 1,
-            ]
+            ],
         ]);
     }
 
@@ -95,7 +95,7 @@ class PageControllerTest extends TestCase
         $response->assertJson([
             'data' => [
                 'id' => 2,
-            ]
+            ],
         ]);
     }
 }

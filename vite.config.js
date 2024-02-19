@@ -1,6 +1,7 @@
 import laravel from "laravel-vite-plugin";
 import path from "path";
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
     optimizeDeps: {
@@ -27,5 +28,12 @@ export default defineConfig({
             input: ["resources/sass/app.scss", "resources/js/app.js"],
             refresh: true,
         }),
+        react(),
     ],
+    test: {
+        // some paths to the files that are test files
+        global: true,
+        environment: "jsdom",
+        setupFiles: "./resources/js/test/setup.js",
+    },
 });

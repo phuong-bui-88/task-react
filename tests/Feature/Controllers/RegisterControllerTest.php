@@ -12,7 +12,6 @@ class RegisterControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    
     public function testRegister()
     {
         $userData = [
@@ -33,7 +32,6 @@ class RegisterControllerTest extends TestCase
         ]);
     }
 
-    
     public function testRegisterValidation()
     {
         $this->withoutExceptionHandling();
@@ -45,7 +43,7 @@ class RegisterControllerTest extends TestCase
             $this->assertEquals('The password field is required.', $e->validator->errors()->first('password'));
         }
     }
-    
+
     public function testRegisterExistingEmail()
     {
         $this->withoutExceptionHandling();

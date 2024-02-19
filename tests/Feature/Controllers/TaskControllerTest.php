@@ -2,20 +2,16 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Http\Controllers\TaskController;
-use App\Http\Requests\TaskRequest;
-use App\Models\Checklist;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
-use Carbon\Carbon;
 
 class TaskControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-
 
     /**
      * Test storing a new task.
@@ -58,7 +54,7 @@ class TaskControllerTest extends TestCase
             ]]);
 
         $taskChecklist = $task->checklist;
-        $this->assertEquals($taskChecklist->id, $checklist->id);    
+        $this->assertEquals($taskChecklist->id, $checklist->id);
     }
 
     /**
@@ -90,7 +86,7 @@ class TaskControllerTest extends TestCase
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
         $task = $this->createTask($checklist);
-        
+
         $response = $this->actingAs($this->adminUser)
             ->delete(route('tasks.destroy', [$checklist, $task]));
 
@@ -126,7 +122,7 @@ class TaskControllerTest extends TestCase
         $this->assertDatabaseHas('tasks', [
             'id' => $tasks[0]['id'],
             'position' => 1,
-        ]);    
+        ]);
     }
 
     /**
@@ -138,11 +134,11 @@ class TaskControllerTest extends TestCase
     {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
-        $task = $this->createTask($checklist);    
+        $task = $this->createTask($checklist);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.complete', $task), ['isCompleted' => true]);
-        
+
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson(['data' => [
                 'id' => $task->id,
@@ -153,8 +149,8 @@ class TaskControllerTest extends TestCase
             ]]);
 
         $response = $this->actingAs($this->user)
-            ->put(route('tasks.complete', $task), ['isCompleted' => false]);    
-        
+            ->put(route('tasks.complete', $task), ['isCompleted' => false]);
+
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson(['data' => [
                 'id' => $task->id,
@@ -162,10 +158,9 @@ class TaskControllerTest extends TestCase
                 'description' => $task->description,
                 'checklistId' => $task->checklist_id,
                 'is_completed' => false,
-            ]]);    
+            ]]);
     }
 
-    
     /**
      * Test favorite a task.
      *
@@ -175,7 +170,7 @@ class TaskControllerTest extends TestCase
     {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
-        $task = $this->createTask($checklist);    
+        $task = $this->createTask($checklist);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => true]);
@@ -195,12 +190,12 @@ class TaskControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => false]);
-        
+
         $response->assertStatus(Response::HTTP_OK)
             ->assertJson(['data' => [
                 'name' => $task->name,
                 'checklistId' => $checklist->id,
-                'is_favorite' => 0
+                'is_favorite' => 0,
             ]]);
 
         $this->assertDatabaseHas('tasks', [
@@ -210,10 +205,11 @@ class TaskControllerTest extends TestCase
         ]);
     }
 
-    public function testDualDateTask() {
+    public function testDualDateTask()
+    {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
-        $task = $this->createTask($checklist);    
+        $task = $this->createTask($checklist);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.dueDate', ['task' => $task->id]), ['dueDate' => '2021-12-31 00:20:00']);
@@ -223,13 +219,14 @@ class TaskControllerTest extends TestCase
             'task_id' => $task->id,
             'user_id' => $this->user->id,
             'due_date' => (new Carbon('2021-12-31 00:20:00'))->timestamp,
-        ]);       
+        ]);
     }
 
-    public function testRemindAtTask() {
+    public function testRemindAtTask()
+    {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
-        $task = $this->createTask($checklist);    
+        $task = $this->createTask($checklist);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.remindAt', ['task' => $task->id]), ['remindAt' => '2021-12-31 00:20:00']);
@@ -239,11 +236,11 @@ class TaskControllerTest extends TestCase
             'task_id' => $task->id,
             'user_id' => $this->user->id,
             'remind_at' => (new Carbon('2021-12-31 00:20:00'))->timestamp,
-        ]);       
+        ]);
     }
 
-
-    public function testGetFavoriteTask() {
+    public function testGetFavoriteTask()
+    {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
         $task1 = $this->createTask($checklist);
@@ -251,13 +248,12 @@ class TaskControllerTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task1->id]), ['isFavorite' => true]);
-        
+
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task2->id]), ['isFavorite' => true]);
 
-
         $response = $this->actingAs($this->user)
-            ->get(route('tasks.favoriteTasks'));    
+            ->get(route('tasks.favoriteTasks'));
 
         $response->assertStatus(200);
         $this->assertCount(2, $response['data']);
@@ -265,10 +261,11 @@ class TaskControllerTest extends TestCase
         $this->assertEquals($response['data'][1]['id'], $task2->id);
     }
 
-    public function testNoteTask() {
+    public function testNoteTask()
+    {
         $checklistGroup = $this->createChecklistGroup();
         $checklist = $this->createChecklist($checklistGroup);
-        $task = $this->createTask($checklist);    
+        $task = $this->createTask($checklist);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.note', ['task' => $task->id]), ['note' => 'This is a note']);
