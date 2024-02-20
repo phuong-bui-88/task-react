@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
-import Bapp from "./Bapp";
 import * as React from "react";
-import { describe, expect, afterEach, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
+import Bapp from "./Bapp";
 
 
-describe("<Hello />", () => {
+describe("Hello", () => {
+
     test("adds 1 + 3 to equal 4", () => {
         expect(4).toBe(4);
         render(<Bapp />);

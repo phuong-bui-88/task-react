@@ -1,7 +1,7 @@
+import react from "@vitejs/plugin-react";
 import laravel from "laravel-vite-plugin";
 import path from "path";
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
 
 export default defineConfig({
     optimizeDeps: {
@@ -35,5 +35,16 @@ export default defineConfig({
         global: true,
         environment: "jsdom",
         setupFiles: "./resources/js/test/setup.js",
+        coverage: {
+            reporter: ["text", "json", "html"],
+            exclude: [
+                "**/node_modules/**",
+                "**/vendor/**",
+                "**/tests/**",
+                "**/ckeditor5/**",
+                "**/public/**",
+                ".eslintrc.cjs",
+            ],
+        },
     },
 });
