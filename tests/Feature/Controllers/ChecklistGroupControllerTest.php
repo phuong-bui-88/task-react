@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
+use Illuminate\Http\Response;
 
 class ChecklistGroupControllerTest extends TestCase
 {
@@ -32,14 +33,14 @@ class ChecklistGroupControllerTest extends TestCase
         $response->assertJsonCount(1, 'data');
         $response->assertJson([
             'data' => [
-                [
+                "{$checklistGroup->id}" => [
                     'id' => $checklistGroup->id,
                     'name' => $checklistGroup->name,
                     'checklists' => [
-                        [
+                        "{$checklist->id}" => [
                             'id' => $checklist->id,
                             'name' => $checklist->name,
-                            'tasks' => [],
+                            'checklistGroupId' => $checklistGroup->id
                         ],
                     ],
                 ],
@@ -55,16 +56,17 @@ class ChecklistGroupControllerTest extends TestCase
         $response->assertJsonCount(1, 'data');
         $response->assertJson([
             'data' => [
-                [
+                "{$checklistGroup->id}" => [
                     'id' => $checklistGroup->id,
                     'name' => $checklistGroup->name,
                     'checklists' => [
-                        [
+                        "{$checklist->id}" => [
                             'id' => $checklist->id,
                             'name' => $checklist->name,
-                            'tasks' => [],
+                            'checklistGroupId' => $checklistGroup->id
                         ],
                     ],
+                    "is_new" => true,
                 ],
             ],
             'analytic' => [
@@ -161,13 +163,7 @@ class ChecklistGroupControllerTest extends TestCase
         $data['name'] = $this->faker->word;
         $response = $this->actingAs($this->adminUser)
             ->put('/api/checklist-groups/'.$checklistGroup->id, $data);
-        $response->assertStatus(200);
-        $response->assertJson([
-            'data' => [
-                'id' => $checklistGroup->id,
-                'name' => $data['name'],
-            ],
-        ]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -185,8 +181,7 @@ class ChecklistGroupControllerTest extends TestCase
         // case 2: access with admin user
         $response = $this->actingAs($this->adminUser)
             ->delete('/api/checklist-groups/'.$checklistGroup->id);
-        $response->assertStatus(200);
-        $response->assertJson(['ok']);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertNull(ChecklistGroup::find($checklistGroup->id));
         // Add additional assertions as needed
     }

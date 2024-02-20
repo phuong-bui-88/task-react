@@ -6,6 +6,7 @@ use App\Models\Checklist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class ChecklistControllerTest extends TestCase
@@ -36,7 +37,7 @@ class ChecklistControllerTest extends TestCase
         $data['name'] = $this->faker->word;
         $response = $this->actingAs($this->adminUser)
             ->post(route('checklists.store', $checklistGroup), $data);
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_CREATED);
         $this->assertDatabaseHas('checklists', [
             'name' => $data['name'],
             'checklist_group_id' => $checklistGroup->id,
@@ -55,14 +56,14 @@ class ChecklistControllerTest extends TestCase
         $response->assertJsonCount(1, 'data');
         $response->assertJson([
             'data' => [
-                [
+                "{$checklistGroup->id}" => [
                     'id' => $checklistGroup->id,
                     'name' => $checklistGroup->name,
                     'checklists' => [
-                        [
+                        "{$checklist->id}" => [
                             'id' => $checklist->id,
                             'name' => $checklist->name,
-                            'tasks' => [],
+                            'checklistGroupId' => $checklistGroup->id,
                         ],
                     ],
                 ],
@@ -77,8 +78,9 @@ class ChecklistControllerTest extends TestCase
             'data' => [
                 'id' => $checklist->id,
                 'name' => $checklist->name,
-                'tasks' => [],
-            ],
+                "checklistGroupId" => $checklistGroup->id,
+                "tasks" => [],
+            ]
         ]);
     }
 
@@ -116,7 +118,7 @@ class ChecklistControllerTest extends TestCase
         // case 2: access with admin user
         $response = $this->actingAs($this->adminUser)
             ->delete(route('checklists.destroy', [$checklistGroup, $checklist]));
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertNull(Checklist::find($checklist->id));
     }
 }

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class PageControllerTest extends TestCase
@@ -47,7 +48,7 @@ class PageControllerTest extends TestCase
 
         $response = $this->actingAs($this->adminUser)
             ->put("api/pages/{$page->id}", $payload);
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
         $page->refresh();
         $this->assertEquals('Updated Title', $page->title);
         $this->assertEquals('Updated Content', $page->content);

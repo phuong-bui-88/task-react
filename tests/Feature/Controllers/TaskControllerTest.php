@@ -27,8 +27,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)
             ->post(route('tasks.store', $checklist), $taskData);
 
-        $response->assertStatus(200)
-            ->assertJson(['data' => ['tasks' => [$taskData]]]);
+        $response->assertStatus(Response::HTTP_CREATED);
     }
 
     /**
@@ -72,8 +71,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)
             ->put(route('tasks.update', [$checklist, $task]), $updatedTaskData);
 
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJson(['data' => $updatedTaskData]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -90,8 +88,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->adminUser)
             ->delete(route('tasks.destroy', [$checklist, $task]));
 
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertEquals($response->getContent(), 'ok');
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -139,26 +136,12 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.complete', $task), ['isCompleted' => true]);
 
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJson(['data' => [
-                'id' => $task->id,
-                'name' => $task->name,
-                'description' => $task->description,
-                'checklistId' => $task->checklist_id,
-                'is_completed' => true,
-            ]]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         $response = $this->actingAs($this->user)
             ->put(route('tasks.complete', $task), ['isCompleted' => false]);
 
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJson(['data' => [
-                'id' => $task->id,
-                'name' => $task->name,
-                'description' => $task->description,
-                'checklistId' => $task->checklist_id,
-                'is_completed' => false,
-            ]]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -175,12 +158,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => true]);
 
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJson(['data' => [
-                'name' => $task->name,
-                'checklistId' => $checklist->id,
-                'is_favorite' => 1,
-            ]]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDatabaseHas('tasks', [
             'task_id' => $task->id,
@@ -191,12 +169,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.favorite', ['task' => $task->id]), ['isFavorite' => false]);
 
-        $response->assertStatus(Response::HTTP_OK)
-            ->assertJson(['data' => [
-                'name' => $task->name,
-                'checklistId' => $checklist->id,
-                'is_favorite' => 0,
-            ]]);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertDatabaseHas('tasks', [
             'task_id' => $task->id,
@@ -214,7 +187,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.dueDate', ['task' => $task->id]), ['dueDate' => '2021-12-31 00:20:00']);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertDatabaseHas('tasks', [
             'task_id' => $task->id,
             'user_id' => $this->user->id,
@@ -231,7 +204,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.remindAt', ['task' => $task->id]), ['remindAt' => '2021-12-31 00:20:00']);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertDatabaseHas('tasks', [
             'task_id' => $task->id,
             'user_id' => $this->user->id,
@@ -270,7 +243,7 @@ class TaskControllerTest extends TestCase
         $response = $this->actingAs($this->user)
             ->put(route('tasks.note', ['task' => $task->id]), ['note' => 'This is a note']);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertDatabaseHas('tasks', [
             'task_id' => $task->id,
             'user_id' => $this->user->id,

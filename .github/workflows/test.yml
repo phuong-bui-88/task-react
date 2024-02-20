@@ -2,6 +2,7 @@ name: Tests
 on: [push, pull_request]
 env:
   CI: true
+  LARAVEL_BYPASS_ENV_CHECK: 1
 
 jobs:
   build:
