@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import react from "@vitejs/plugin-react";
 import laravel from "laravel-vite-plugin";
 import path from "path";
@@ -32,7 +34,7 @@ export default defineConfig({
     ],
     test: {
         // some paths to the files that are test files
-        global: true,
+        globals: true,
         environment: "jsdom",
         setupFiles: "./resources/js/test/setup.js",
         coverage: {
@@ -44,6 +46,8 @@ export default defineConfig({
                 "**/ckeditor5/**",
                 "**/public/**",
                 ".eslintrc.cjs",
+                "**/js/app.jsx",
+                "**/js/bootstrap.js",
             ],
         },
     },

@@ -23,4 +23,16 @@ module.exports = {
     rules: {
         "react/prop-types": "off",
     },
+    globals: {
+        it: true,
+        vi: true,
+        describe: true,
+        afterEach: true,
+        beforeEach: true,
+        beforeAll: true,
+        afterAll: true,
+        describe: true,
+        expect: true,
+        test: true,
+    },
 };
