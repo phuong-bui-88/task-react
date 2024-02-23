@@ -6,6 +6,13 @@ const data = {
     name: "John Doe",
 };
 
+export const userErrors = {
+    errors: {
+        email: [`Failed to login:  user 2 does not exist`],
+        password: [`Failed to password:  user 2 does not exist`],
+    },
+};
+
 const token = {
     token: "test-token",
 };
@@ -16,7 +23,13 @@ export const handlers = [
         return HttpResponse.json(data);
     }),
 
-    http.post("/login", (req, res, ctx) => {
-        return HttpResponse.json(token);
+    http.post("/login", async ({ request }) => {
+        const { email } = await request.json();
+
+        if (email === "test@example.com") {
+            return HttpResponse.json(token);
+        }
+
+        return HttpResponse.json(userErrors, { status: 401 });
     }),
 ];

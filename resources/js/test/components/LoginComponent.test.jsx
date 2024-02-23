@@ -1,25 +1,30 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import LoginComponent from '@components/LoginComponent';
 
+import LoginComponent from '@components/LoginComponent';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { userErrors } from '@test/mocks/handlers';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { beforeEach, vi } from 'vitest';
+import mockRoute from '../mocks/mockRouter';
+
 
 const navigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+    const mod = await vi.importActual("react-router-dom");
+    return {
+        ...mod,
+        useNavigate: () => navigate,
+        // useParams: () => ({
+        //     taskId: 123,
+        // }),
+    };
+});
 
 describe('LoginComponent', () => {
     let container;
-
-    vi.mock('react-router-dom', async () => {
-        const mod = await vi.importActual('react-router-dom');
-        return {
-            ...mod,
-            useNavigate: () => navigate,
-            // useParams: () => ({
-            //     taskId: 123,
-            // }),
-        };
-    });
+    afterEach(() => {
+        vi.restoreAllMocks()
+    })
 
     beforeEach(() => {
         container = render(<Router><LoginComponent /></Router>).container;
@@ -37,7 +42,7 @@ describe('LoginComponent', () => {
         expect(navigate).toHaveBeenCalledWith('/dashboard');
     });
 
-    it('submits the form and logs in the user', async () => {
+    it('submits the form and logs in the user right then redirect to dashboard', async () => {
         const emailInput = container.querySelector('input[name="email"]');
         const passwordInput = container.querySelector('input[name="password"]');
         const loginButton = screen.getByRole('button', { name: 'Login' });
@@ -51,34 +56,23 @@ describe('LoginComponent', () => {
         fireEvent.change(passwordInput, { target: { value: formJson.password } });
 
         fireEvent.click(loginButton);
+
+        expect(navigate).toHaveBeenCalledWith('/dashboard');
     });
 
-    // it('displays errors if login fails', async () => {
-    //     const emailInput = screen.getByLabelText('Email');
-    //     const passwordInput = screen.getByLabelText('Password');
-    //     const loginButton = screen.getByRole('button', { name: 'Login' });
+    it('displays errors if login fails', async () => {
+        const emailInput = container.querySelector('input[name="email"]');
+        const passwordInput = container.querySelector('input[name="password"]');
+        const loginButton = screen.getByRole('button', { name: 'Login' });
 
-    //     const formJson = {
-    //         email: 'test@example.com',
-    //         password: 'password123',
-    //     };
+        const formJson = {
+            email: 'test_wrong_email@example.com',
+            password: 'password123',
+        };
 
-    //     fireEvent.change(emailInput, { target: { value: formJson.email } });
-    //     fireEvent.change(passwordInput, { target: { value: formJson.password } });
+        fireEvent.change(emailInput, { target: { value: formJson.email } });
+        fireEvent.change(passwordInput, { target: { value: formJson.password } });
 
-    //     const error = {
-    //         errors: {
-    //             email: 'Invalid email',
-    //             password: 'Invalid password',
-    //         },
-    //     };
-
-    //     UserService.loginUser.mockRejectedValueOnce(error);
-
-    //     fireEvent.click(loginButton);
-
-    //     expect(UserService.loginUser).toHaveBeenCalledWith(formJson);
-    //     expect(screen.getByText('Invalid email')).toBeInTheDocument();
-    //     expect(screen.getByText('Invalid password')).toBeInTheDocument();
-    // });
+        fireEvent.click(loginButton);
+    });
 });

@@ -22,8 +22,8 @@ class BaseService {
             const response = await this.api.get(endpoint);
             return isFullResponse ? response.data : response.data.data;
         } catch (error) {
-            console.error("Error:", error);
-            throw error;
+            // console.error("Error:", error);
+            throw this.formatErrors(error);
         } finally {
             LocalStorageService.removeLoading();
             window.dispatchEvent(new Event("removeLoadingStorage"));
@@ -38,8 +38,8 @@ class BaseService {
             const response = await this.api.post(endpoint, data);
             return response.data;
         } catch (error) {
-            console.error("Error:", error);
-            throw error;
+            // console.error("Error:", error);
+            throw this.formatErrors(error);
         } finally {
             LocalStorageService.removeLoading();
         }
@@ -58,8 +58,8 @@ class BaseService {
             const response = await this.api.post(endpoint, data, config);
             return response.data;
         } catch (error) {
-            console.error("Error:", error);
-            throw error;
+            // console.error("Error:", error);
+            throw this.formatErrors(error);
         } finally {
             LocalStorageService.removeLoading();
         }
@@ -74,8 +74,8 @@ class BaseService {
             const response = await this.api.put(endpoint, data);
             return response.data;
         } catch (error) {
-            console.error("Error:", error);
-            throw error;
+            // console.error("Error:", error);
+            throw this.formatErrors(error);
         } finally {
             LocalStorageService.removeLoading();
         }
@@ -90,8 +90,8 @@ class BaseService {
             const response = await this.api.delete(endpoint);
             return response.data;
         } catch (error) {
-            console.error("Error:", error);
-            throw error;
+            // console.error("Error:", error);
+            throw this.formatErrors(error);
         } finally {
             LocalStorageService.removeLoading();
         }
@@ -99,6 +99,14 @@ class BaseService {
 
     setAuthorizationHeader(token) {
         this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
+    formatErrors(error) {
+        if (error.response) {
+            return error.response.data;
+        }
+
+        return error;
     }
 }
 
