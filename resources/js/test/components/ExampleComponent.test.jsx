@@ -4,5 +4,4 @@ import ExampleComponent from '@components/ExampleComponent'
 
 test('renders ExampleComponent', () => {
     render(<ExampleComponent />);
-    screen.debug();
 });

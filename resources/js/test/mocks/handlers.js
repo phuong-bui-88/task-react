@@ -1,10 +1,6 @@
 import { HttpResponse, http } from "msw";
 
 // Mock data
-const data = {
-    id: 1,
-    name: "John Doe",
-};
 
 export const userErrors = {
     errors: {
@@ -19,8 +15,29 @@ const token = {
 
 export const handlers = [
     // Mock GET request
-    http.get("/api/user", (req, res, ctx) => {
-        return HttpResponse.json(data);
+    http.get("/api/user", async ({ request }) => {
+        const token = request.headers.get("Authorization");
+        if (token == "Bearer user-token") {
+            return HttpResponse.json({ data: { is_admin: false } });
+        }
+
+        if (token == "Bearer admin-token") {
+            return HttpResponse.json({ data: { is_admin: true } });
+        }
+
+        return HttpResponse.json();
+    }),
+
+    http.get("/api/checklist-groups", async ({ request }) => {
+        const url = new URL(request.url);
+        const isUser = url.searchParams.get("is_user");
+        console.log(isUser);
+
+        return HttpResponse.json({ data: [], analytic: {} });
+    }),
+
+    http.get("/api/pages", () => {
+        return HttpResponse.json([]);
     }),
 
     http.post("/login", async ({ request }) => {
@@ -31,5 +48,9 @@ export const handlers = [
         }
 
         return HttpResponse.json(userErrors, { status: 401 });
+    }),
+
+    http.post("/logout", async () => {
+        return await HttpResponse.json({ message: "User logged out" });
     }),
 ];

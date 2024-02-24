@@ -8,7 +8,7 @@ import LeftSidebarUserComponent from "./user/LeftSidebarUserComponent.jsx";
 function LeftSidebarComponent({ checklistGroups, analyticChecklistGroups, user, pages }) {
 
     return (
-        <div>
+        <div id="left-sidebar">
             <ul className="sidebar-nav">
                 <div data-simplebar="init" id="0">
                     <div className="simplebar-wrapper" style={{ margin: '0px' }}>

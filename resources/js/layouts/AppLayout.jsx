@@ -48,6 +48,7 @@ function AppLayout() {
         const response = await ChecklistGroupService.getChecklistGroups(
             isUser
         );
+
         setChecklistGroups(response.data);
         setAnalyticChecklistGroups(response.analytic);
     };
@@ -87,7 +88,6 @@ function AppLayout() {
             if (!response) {
                 localStorage.removeItem("token");
                 navigate("/login");
-                return;
             }
             setUser(response);
         };
@@ -102,6 +102,7 @@ function AppLayout() {
         if (token) {
             fetchUser();
         }
+
     }, [token]);
 
     useEffect(() => {
@@ -131,7 +132,7 @@ function AppLayout() {
             <LoadingComponent isLoading={loading} />
 
             {user && (
-                <div
+                <div id="left-sidebar-wrapper"
                     className={`sidebar de sidebar-fixed ${!leftSidebarActive ? "hide" : ""
                         }`}
                     style={{ height: "100%", overflow: "hidden scroll" }}

@@ -28,7 +28,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
     };
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid" id="header-sidebar">
             <button
                 type="button"
                 className="header-toggler ps-1"
@@ -135,6 +135,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
 
                                 <li>
                                     <a
+                                        id="logoutUser"
                                         className="dropdown-item"
                                         href="#"
                                         onClick={logoutClick}
