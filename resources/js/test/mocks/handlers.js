@@ -16,6 +16,44 @@ export const pageResponse = {
     },
 };
 
+export const checklistReponse = {
+    data: {
+        name: "Test",
+        checklistGroupId: 1,
+        tasks: [
+            {
+                id: 1,
+                name: "Test task 1",
+                description: "Test description 1",
+                is_completed: false,
+                is_favorite: false,
+            },
+            {
+                id: 2,
+                name: "Test task 2",
+                description: "Test description 2",
+                is_completed: false,
+                is_favorite: false,
+            },
+        ],
+    },
+};
+
+export const checklistGroupsResponse = {
+    data: {
+        1: {
+            id: 1,
+            name: "Test",
+            checklists: {
+                1: {
+                    id: 1,
+                    name: "Test",
+                },
+            },
+        },
+    },
+};
+
 export const emailRight = "emailRight@gmail.com";
 
 const token = {
@@ -43,6 +81,34 @@ export const handlers = [
         console.log(isUser);
 
         return HttpResponse.json({ data: [], analytic: {} });
+    }),
+
+    http.get("/api/checklists/:id", async () => {
+        return HttpResponse.json(checklistReponse);
+    }),
+
+    http.put("/api/tasks/:id/complete", async () => {
+        return HttpResponse.json({ data: [] });
+    }),
+
+    http.put("/api/tasks/:id/favorite", async () => {
+        return HttpResponse.json({ data: [] });
+    }),
+
+    http.put("/api/tasks/:id/note", async () => {
+        return HttpResponse.json({ data: [] });
+    }),
+
+    http.put("/api/tasks/:id/due-date", async () => {
+        return HttpResponse.json({ data: [] });
+    }),
+
+    http.put("/api/tasks/:id/remind-at", async () => {
+        return HttpResponse.json({ data: [] });
+    }),
+
+    http.get("/api/favorite-tasks", async () => {
+        return HttpResponse.json({ data: checklistReponse.data.tasks });
     }),
 
     http.get("/api/pages", () => {
@@ -75,5 +141,32 @@ export const handlers = [
 
     http.post("/logout", async () => {
         return await HttpResponse.json({ message: "User logged out" });
+    }),
+
+    // admin
+    http.get("/api/checklist-groups/:id/checklists/:id", async () => {
+        return HttpResponse.json(checklistReponse);
+    }),
+
+    http.get("/api/users", async () => {
+        return HttpResponse.json({
+            data: [
+                {
+                    id: 1,
+                    created_at: "2022-01-01",
+                    name: "John Doe",
+                    email: "john@example.com",
+                    website: "example.com",
+                },
+                {
+                    id: 2,
+                    created_at: "2022-01-02",
+                    name: "Jane Doe",
+                    email: "jane@example.com",
+                    website: "example.com",
+                },
+            ],
+            meta: { last_page: 2 },
+        });
     }),
 ];

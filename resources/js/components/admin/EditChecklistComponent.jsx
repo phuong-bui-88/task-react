@@ -64,11 +64,16 @@ function EditChecklistComponent({
     };
 
     useEffect(() => {
+        if (!checklistId) {
+            return;
+        }
+
         fetchChecklist(checklistGroupId, checklistId);
     }, [checklistId]);
 
-    return (checklist &&
+    return checklist && console.log(checklist, 'ch') && (
         <div className="container-lg">
+            {console.log(checklist, 'show inside')}
             <div className="row">
                 <div className="col-12">
                     <div className="card mb-4">
@@ -142,11 +147,11 @@ function EditChecklistComponent({
                 </div>
             </div>
 
-            <div className="row">
+            {/* <div className="row">
                 <div className="col-12">
                     <CreateTaskComponent checklistGroupId={checklistGroupId} checklistId={checklistId} onFetchChecklist={fetchChecklist} />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -19,8 +19,8 @@ function ChecklistComponent({
     onUserFaviroteTasks,
     tasksList,
 }) {
-
     const { checklistId } = useParams();
+
     const [checklist, setChecklist] = useState(null);
     const [tasks, setTasks] = useState(null);
 
@@ -95,6 +95,10 @@ function ChecklistComponent({
     };
 
     useEffect(() => {
+        if (!checklistId) {
+            return;
+        }
+
         if (checklistId) {
             fetchChecklist(checklistId);
         }
@@ -125,7 +129,7 @@ function ChecklistComponent({
     }
 
     return tasks && (
-        <div className="row col-12">
+        <div className="row col-12 task-checklist">
             <div className="col-8">
 
                 {checklist && (<CountTaskComponent
@@ -135,85 +139,88 @@ function ChecklistComponent({
 
                 <div className="card m-3">
                     <div className="card-header">
-                        <h3>{(checklist) ? checklist.name : 'Important'}</h3>
+                        <h3>{checklist?.name}</h3>
                     </div>
-                    <div className="card-body">
+                    <div className="card-body" id="user-task-list">
                         <table className="table table-responsive">
                             <tbody>
                                 {tasks.map((task, index) => (
                                     (
-                                        (index == 2 && !user?.subscribe) ?
-                                            (<React.Fragment key={"row" + index}>
-                                                <tr>
-                                                    <td colSpan="4" className="text-center">
-                                                        <p>
-                                                            You are limit at {index} task per checklist<br></br>
-                                                            Unclock all now
-                                                        </p>
-                                                        <button className="btn btn-primary" onClick={handlePayment}>
-                                                            5000 VND
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </React.Fragment>)
-                                            :
-                                            (<React.Fragment key={"row" + index}>
-                                                <tr
-                                                    onClick={(e) => {
-                                                        if (e.target.type !== "checkbox" && e.target.type != "favorite") {
-                                                            toggleSlide(index);
-                                                        }
-                                                    }}
-                                                >
-                                                    <td className="col-1">
-                                                        <input
-                                                            className="form-check-input"
-                                                            type="checkbox"
-                                                            name="isCompleted"
-                                                            value=""
-                                                            onChange={(e) => {
-                                                                handleCompletedTask(e, tasks[index], index);
-                                                            }}
-                                                            checked={task.is_completed}
-                                                        />
-                                                    </td>
-                                                    <td className="w-75">
-                                                        {tasks[index].name}
-                                                        {(tasksList) &&
-                                                            <small className="d-block">
-                                                                <i>{tasks[index].checklist_name}
-                                                                    {(tasks[index].due_date) && ' / ' +
-                                                                        new Date(tasks[index].due_date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
-                                                                    }</i></small>
-                                                        }
-                                                    </td>
-                                                    <td className="align-middle">
-                                                        {expandedTasks[index] ? (
-                                                            <ExpandLessIcon />
-                                                        ) : (
-                                                            <ExpandMoreIcon />
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <a className="info-color" onClick={(e) => handleFavoritedTask(e, tasks[index], index)}>
-                                                            {task.is_favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr
-                                                    className={
-                                                        expandedTasks[index] ? "" : "d-none"
-                                                    }
-                                                >
-                                                    <td
-                                                        className="ck-content"
-                                                        colSpan="4"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: task.description,
+                                        (index > 2 && !user?.subscribe) ? "" :
+                                            (index == 2 && !user?.subscribe) ?
+                                                (<React.Fragment key={"row" + index}>
+                                                    <tr data-testid="payment-is-required">
+                                                        <td colSpan="4" className="text-center">
+                                                            <p>
+                                                                You are limit at {index} task per checklist<br></br>
+                                                                Unclock all now
+                                                            </p>
+                                                            <button className="btn btn-primary" onClick={handlePayment}>
+                                                                5000 VND
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </React.Fragment>)
+                                                :
+                                                (<React.Fragment key={"row" + index}>
+                                                    <tr
+                                                        onClick={(e) => {
+                                                            if (e.target.type !== "checkbox" && e.target.type != "favorite") {
+                                                                toggleSlide(index);
+                                                            }
                                                         }}
-                                                    ></td>
-                                                </tr>
-                                            </React.Fragment>)
+                                                        data-testid="row-title"
+                                                    >
+                                                        <td className="col-1">
+                                                            <input
+                                                                className="form-check-input complete-task"
+                                                                type="checkbox"
+                                                                name="isCompleted"
+                                                                value=""
+                                                                onChange={(e) => {
+                                                                    handleCompletedTask(e, tasks[index], index);
+                                                                }}
+                                                                checked={task.is_completed}
+                                                            />
+                                                        </td>
+                                                        <td className="w-75">
+                                                            {tasks[index].name}
+                                                            {(tasksList) &&
+                                                                <small className="d-block" data-testid="due_date">
+                                                                    <i>{tasks[index].checklist_name}
+                                                                        {(tasks[index].due_date) && ' / ' +
+                                                                            new Date(tasks[index].due_date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                                                                        }</i></small>
+                                                            }
+                                                        </td>
+                                                        <td className="align-middle">
+                                                            {expandedTasks[index] ? (
+                                                                <ExpandLessIcon />
+                                                            ) : (
+                                                                <ExpandMoreIcon />
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            <a className="info-color favorite-task" onClick={(e) => handleFavoritedTask(e, tasks[index], index)}>
+                                                                {task.is_favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr
+                                                        className={
+                                                            expandedTasks[index] ? "" : "d-none"
+                                                        }
+                                                        data-testid="row-content"
+                                                    >
+                                                        <td
+                                                            className="ck-content"
+                                                            colSpan="4"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: task.description,
+                                                            }}
+                                                        ></td>
+                                                    </tr>
+                                                </React.Fragment>)
                                     )
                                 ))}
                             </tbody>
@@ -223,7 +230,7 @@ function ChecklistComponent({
             </div>
 
             <RightChecklistComponent expandedTask={expandedTask} onFavoritedTask={handleFavoritedTask} onUpdateExpandTask={handleUpdateExpandTask} />
-        </div>
+        </div >
     )
 }
 

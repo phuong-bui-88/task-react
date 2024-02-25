@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Link } from 'react-router-dom';
 
@@ -8,22 +8,13 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import LeftSidebarRemindUserComponent from "./LeftSidebarRemindUserComponent";
 
 function LeftSidebarUserComponent({ checklistGroups, analyticChecklistGroups }) {
-    const [isActive, setIsActive] = useState(false);
-
-    const handleChecklistGroupClick = (id) => {
-        setIsActive((prevIsActive) => ({
-            ...prevIsActive,
-            [id]: !prevIsActive[id]
-        }));
-    }
-
     return (
-        <div>
+        <div className="left-sidebar-user">
             <LeftSidebarRemindUserComponent analyticChecklistGroups={analyticChecklistGroups} />
 
             {checklistGroups && Object.entries(checklistGroups).map(([, checklistGroup]) => (
                 <li key={checklistGroup.id}>
-                    <div className={`nav-title show ${isActive[checklistGroup.id] ? 'show' : ''}`} >
+                    <div className={`nav-title show`} >
                         {checklistGroup.name}
 
                         {checklistGroup.is_new && (

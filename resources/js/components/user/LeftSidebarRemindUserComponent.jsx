@@ -30,7 +30,7 @@ const LeftSidebarRemindUserComponent = ({ analyticChecklistGroups }) => {
                 </a>
             </li>
         </ul>
-    );
+    )
 };
 
 export default LeftSidebarRemindUserComponent;

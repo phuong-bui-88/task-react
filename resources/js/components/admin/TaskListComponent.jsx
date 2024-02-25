@@ -69,7 +69,7 @@ const TaskListComponent = ({ checklistId, tasks, onFetchChecklist }) => {
                                                 <Link className="btn btn-primary me-3" to={`/admin/checklists/${checklistId}/tasks/${item.id}/edit`}>Edit</Link>
 
                                                 <form method="POST" onSubmit={(e) => handleDeletedSubmit(e, item)} className="d-inline-block">
-                                                    <button className="btn btn-danger" type="submit">Delete</button>
+                                                    <button className="btn btn-danger" type="submit">Delete {`/admin/checklists/${checklistId}/tasks/${item.id}/edit`}</button>
                                                 </form>
                                             </td>
                                         </tr>

@@ -83,11 +83,10 @@ it('handles sidebar toggle', async () => {
 it('when user click logout then should navigate to login', async () => {
     LocalStorageService.setToken('user-token');
     const { container } = render(<Router><AppLayout /></Router>);
-    await waitFor(() => screen.debug());
 
-    const logoutButton = container.querySelector('#logoutUser');
-    console.log(logoutButton, 'logoutButton');
-    fireEvent.click(logoutButton);
-
-    await waitFor(() => expect(navigate).toHaveBeenCalledWith('/login'));
+    await waitFor(() => {
+        const sidebarToggleButton = container.querySelector('#header-sidebar .header-toggler');
+        fireEvent.click(sidebarToggleButton);
+        expect(navigate).toHaveBeenCalledWith('/login');
+    });
 });

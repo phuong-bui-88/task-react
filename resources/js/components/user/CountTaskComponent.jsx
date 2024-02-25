@@ -24,7 +24,7 @@ const CountTaskComponent = ({ checklistGroups, checklist }) => {
     }, [checklistGroups]);
 
     return (
-        <div className="card m-3">
+        <div className="card m-3" id="count-task">
             <div className="card-header">Store Review</div>
 
             <div className="card-body">

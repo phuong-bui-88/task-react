@@ -32,8 +32,6 @@ function LoginComponent() {
 
             navigate('/dashboard');
         } catch (error) {
-            console.log(error.errors, 'errors');
-            console.log(error.errors.email, 'errors email');
             setErrors(error.errors);
         }
     }

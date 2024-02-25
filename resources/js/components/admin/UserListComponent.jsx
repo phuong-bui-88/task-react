@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import UserService from "../../services/UserService.js";
 
-const UserListComponent = ({ token }) => {
+const UserListComponent = () => {
     const [users, setUsers] = useState();
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchUsers = async () => {
-        const response = await UserService.getUsers(currentPage, token);
+        const response = await UserService.getUsers(currentPage);
         setUsers(response.data);
         setTotalPages(response.meta.last_page);
     }

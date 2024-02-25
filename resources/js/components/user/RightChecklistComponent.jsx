@@ -100,7 +100,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
         dateValue.setHours(defaultTime.split(':')[0], defaultTime.split(':')[1]);
 
         if (type === dateType.TODAY) {
-            dateValue.setDate(dateValue.getDate() + 1);
+            dateValue.setDate(dateValue.getDate());
             setRemindAt(dateValue);
         }
 
@@ -153,7 +153,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
     }
 
     return expandedTask.status && (
-        <div className='col-4'>
+        <div className='col-4 right-user-checklist'>
             <div className="card m-3">
                 <div className="card-body">
                     <div className="text-medium-emphasis">
@@ -179,21 +179,21 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
 
             <div className="card m-3">
                 <div className="card-body">
-                    <div>
+                    <div className='remain-at-session'>
                         <div>
                             <a href='#' onClick={(e) => expandedToggle(e, expandedType.REMIND_AT)} className='link-unstyled'>
                                 <EmailIcon className="info-color me-3" />Remind me
                             </a>
 
                             {(remindAt != null) && (
-                                <div className='d-block mt-2'>
+                                <div className='d-block mt-2 show'>
                                     {format(new Date(remindAt), dateFormatFullValue)}
-                                    <a className='ms-2' href="#" onClick={(e) => removeRemindAt(e)}>Remove</a>
+                                    <a className='ms-2 remove' href="#" onClick={(e) => removeRemindAt(e)}>Remove</a>
                                 </div>
                             )}
                         </div>
                         {(expanded[expandedType.REMIND_AT]) && (
-                            <div>
+                            <div className='add'>
                                 <div className="col cursor-pointer" onClick={() => addRemindAt(dateType.TODAY)}>
                                     <FiberManualRecordIcon className="info-color ms-5 me-3" />
                                     Today {defaultTime}
@@ -216,7 +216,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
                                         theme: 'material_blue'
                                     }}
                                     onChange={(date) => setSelectedDate(date[0])}
-                                    className="mt-1"
+                                    className="mt-1 select-date"
                                 />
                                 <button type="button" className="btn btn-primary ms-2 btn-info" onClick={(e) => addRemindAt(dateType.PICK_A_DATE, selectedDate, e)}>Save</button>
                             </div>
@@ -224,21 +224,21 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
                     </div>
 
                     <hr className="border-2 border-secondary" />
-                    <div>
+                    <div className='due-date-session'>
                         <div>
                             <a href='#' onClick={(e) => expandedToggle(e, expandedType.DUE_DATE)} className='link-unstyled'>
                                 <CheckBoxIcon className="info-color me-3" />Add Due Date
                             </a>
 
                             {(dueDate != null) && (
-                                <div className='d-block mt-2'>
+                                <div className='d-block mt-2 show'>
                                     {dueDate.toDateString()}
-                                    <a className='ms-2' href="#" onClick={() => removeDueDate()}>Remove</a>
+                                    <a className='ms-2 remove' href="#" onClick={() => removeDueDate()}>Remove</a>
                                 </div>
                             )}
                         </div>
                         {(expanded[expandedType.DUE_DATE]) && (
-                            <div>
+                            <div className='add'>
                                 <div className="col" onClick={() => addDueDate(dateType.TODAY)}>
                                     <FiberManualRecordIcon className="info-color ms-5 me-3" />
                                     Today
@@ -253,7 +253,7 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
                                 </div>
                                 <FiberManualRecordIcon className="info-color ms-5 me-3" />
                                 Or pick a date
-                                <input type="date" name="date" min={new Date().toISOString().substr(0, 10)} className="ms-5"
+                                <input type="date" name="date" min={new Date().toISOString().substr(0, 10)} className="ms-5 select-date"
                                     onChange={(event) => addDueDate(dateType.PICK_A_DATE, event)} />
                             </div>
                         )}
@@ -261,21 +261,21 @@ const RightChecklistComponent = ({ expandedTask, onFavoritedTask, onUpdateExpand
                 </div>
             </div >
 
-            <div className='card m-3'>
+            <div className='card m-3 note-session'>
                 <div className="card-body">
-                    <a href='#' onClick={(e) => expandedToggle(e, expandedType.NOTE)} className='link-unstyled'>
+                    <a href='#' onClick={(e) => expandedToggle(e, expandedType.NOTE)} className='link-unstyled expanded-note-toggle'>
                         <NoteIcon className="info-color me-3" />Note
                     </a>
 
                     {(expanded[expandedType.NOTE]) &&
                         <div>
                             <textarea className="form-control mt-3" id="note-task" rows="3" onChange={(e) => changeNote(e)} value={note}></textarea>
-                            <button type="button" className="btn btn-primary mt-3 btn-info" onClick={saveNote}>Save</button>
+                            <button type="button" className="btn btn-primary mt-3 btn-info" onClick={saveNote} id="note-task-submit">Save</button>
                         </div>
                     }
 
                     {(!expanded[expandedType.NOTE]) &&
-                        <div>
+                        <div className='show'>
                             {note}
                             {(note) && <a href="#" className="d-block info-color" onClick={(e) => expandedToggle(e, expandedType.NOTE)}>Edit</a>}
                         </div>
