@@ -67,7 +67,7 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
                 </svg>
             </button>
 
-            {user ? (
+            {user && (
                 <div>
                     <ul className="header-nav ms-auto float-start">
                         <li className="nav-item d-flex">
@@ -148,8 +148,6 @@ function HeaderSidebarComponent({ onLeftSibarActive, user, onLogout }) {
                         </li>
                     </ul>
                 </div>
-            ) : (
-                ""
             )}
         </div>
     );

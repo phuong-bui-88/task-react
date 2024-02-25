@@ -23,7 +23,6 @@ function RegisterComponent() {
 
     const navigate = useNavigate();
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -34,7 +33,6 @@ function RegisterComponent() {
 
         try {
             const token = await UserService.registerUser(formJson);
-            console.log('token register', token);
             LocalStorageService.setToken(token);
 
             navigate('/dashboard');
@@ -68,6 +66,7 @@ function RegisterComponent() {
                                 </span>
                                 <input className={HelperService.addInvalid('form-control', errors?.email)} type="email" placeholder="Email" name="email" required />
                                 <ErrorComponent error={errors?.email} />
+                                {/* {errors?.email && console.log(errors.email, errors.email[0], 'show custom')} */}
                             </div>
 
                             <div className="input-group mb-3">

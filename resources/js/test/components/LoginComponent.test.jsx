@@ -3,9 +3,9 @@ import React from 'react';
 import LoginComponent from '@components/LoginComponent';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { userErrors } from '@test/mocks/handlers';
+import { errorsResponse } from '@test/mocks/handlers';
 import { BrowserRouter as Router } from 'react-router-dom';
-import mockRoute from '../mocks/mockRouter';
+// import mockRoute from '../mocks/mockRouter';
 
 
 const navigate = vi.fn();
