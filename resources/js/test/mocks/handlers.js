@@ -9,6 +9,13 @@ export const userErrors = {
     },
 };
 
+export const pageResponse = {
+    data: {
+        title: "Test Page",
+        content: "<p>Test content</p>",
+    },
+};
+
 const token = {
     token: "test-token",
 };
@@ -38,6 +45,10 @@ export const handlers = [
 
     http.get("/api/pages", () => {
         return HttpResponse.json([]);
+    }),
+
+    http.get("/api/welcome", async () => {
+        return HttpResponse.json(pageResponse);
     }),
 
     http.post("/login", async ({ request }) => {
